@@ -235,7 +235,11 @@ export const MENU_ITEMS = [{
     variant: 'danger'
   },
   url: '/widgets'
-}, {
+},];
+
+
+// these are the menu sys_that made hidden 
+const disabedMenus = [{
   key: 'Components',
   label: 'COMPONENTS',
   isTitle: true
@@ -599,4 +603,4 @@ export const MENU_ITEMS = [{
   key: ' Disable Item',
   label: ' Disable Item',
   icon: 'ri:prohibited-2-line'
-}];
+}]

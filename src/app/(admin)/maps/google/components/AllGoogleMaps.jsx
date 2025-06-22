@@ -2,8 +2,8 @@
 
 import ComponentContainerCard from '@/components/ComponentContainerCard';
 import UIExamplesList from '@/components/UIExamplesList';
-import { InfoWindow, Polyline } from 'google-maps-react';
-import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
+import { InfoWindow, Polyline } from '@react-google-maps/api';
+import { GoogleMap as Map, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { useRef, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 const BasicMap = ({
@@ -541,6 +541,20 @@ const AllGoogleMaps = ({
       </Col>
     </Row>;
 };
-export default GoogleApiWrapper({
+const AllGoogleMapsWrapper = () => {
+  const { isLoaded, loadError } = useJsApiLoader({
   apiKey: 'AIzaSyDsucrEdmswqYrw0f6ej3bf4M4suDeRgNA'
-})(AllGoogleMaps);
+  });
+
+  if (loadError) {
+    return <div>Error loading maps</div>;
+  }
+
+  if (!isLoaded) {
+    return <div>Loading maps</div>;
+  }
+
+  return <AllGoogleMaps google={window.google} />;
+};
+
+export default AllGoogleMapsWrapper;

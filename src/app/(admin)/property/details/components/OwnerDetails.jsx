@@ -10,7 +10,13 @@ import Link from 'next/link';
 import { Button, Card, CardBody, CardFooter, CardHeader, CardTitle, Col, Row } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-const OwnerDetails = () => {
+const OwnerDetails = ({owner}) => {
+  console.log(owner)
+
+  if (!owner || Object.keys(owner).length === 0) {
+    return <div>Owner not found</div>
+  }
+  
   const messageSchema = yup.object({
     date: yup.string().required('Please enter date'),
     time: yup.string().required('Please enter time'),
@@ -28,14 +34,14 @@ const OwnerDetails = () => {
   return <Col xl={3} lg={4}>
       <Card>
         <CardHeader className="bg-light-subtle">
-          <CardTitle as={'h4'}>Property Owner Details</CardTitle>
+          <CardTitle as={'h4'}>{owner.name}</CardTitle>
         </CardHeader>
         <CardBody>
           <div className="text-center">
             <Image src={avatar1} alt="avatar" className="avatar-xl rounded-circle border border-2 border-light mx-auto" />
             <div className="mt-2">
               <Link href="" className="fw-medium text-dark fs-16">
-                Gaston Lapierre
+               {owner?.name}
               </Link>
               <p className="mb-0">(Owner)</p>
             </div>

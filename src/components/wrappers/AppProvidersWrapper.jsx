@@ -13,7 +13,7 @@ const AppProvidersWrapper = ({
   children
 }) => {
   const handleChangeTitle = () => {
-    if (document.visibilityState == 'hidden') document.title = 'Please come back 🥺';else document.title = DEFAULT_PAGE_TITLE;
+    if (document.visibilityState == 'hidden') document.title = DEFAULT_PAGE_TITLE; else document.title = DEFAULT_PAGE_TITLE;
   };
   useEffect(() => {
     if (document) {
@@ -31,12 +31,12 @@ const AppProvidersWrapper = ({
     };
   }, []);
   return <SessionProvider>
-      <LayoutProvider>
-        <NotificationProvider>
-          {children}
-          <ToastContainer theme="colored" />
-        </NotificationProvider>
-      </LayoutProvider>
-    </SessionProvider>;
+    <LayoutProvider>
+      <NotificationProvider>
+        {children}
+        <ToastContainer theme="colored" />
+      </NotificationProvider>
+    </LayoutProvider>
+  </SessionProvider>;
 };
 export default AppProvidersWrapper;

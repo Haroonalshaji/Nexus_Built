@@ -9,8 +9,8 @@ const ThemeModeToggle = () => {
     changeTheme
   } = useLayoutContext();
   const isDark = theme === 'dark';
-  return <div className="topbar-item">
-      <button type="button" onClick={() => changeTheme(isDark ? 'light' : 'dark')} className="topbar-button" id="light-dark-mode">Theme_Button
+  return <div className="topbar-item">  
+      <button type="button" onClick={() => changeTheme(isDark ? 'light' : 'dark')} className="topbar-button" id="light-dark-mode">
         {theme == 'dark' ? <IconifyIcon icon="ri:sun-line" className="fs-24 dark-mode" /> : <IconifyIcon icon="ri:moon-line" className="fs-24 light-mode" />}
       </button>
     </div>;

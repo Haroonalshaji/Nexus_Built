@@ -10,7 +10,7 @@ const Transaction = async () => {
         <Card>
           <CardHeader className="d-flex justify-content-between align-items-center">
             <div>
-              <CardTitle as={'h4'}>Latest Transaction</CardTitle>
+              <CardTitle as={'h4'}>Latest Vendor Applications</CardTitle>
             </div>
             <Dropdown>
               <DropdownToggle as={'a'} className="btn btn-sm btn-outline-light rounded content-none icons-center" data-bs-toggle="dropdown" aria-expanded="false">
@@ -36,13 +36,13 @@ const Transaction = async () => {
                         <label className="form-check-label" htmlFor="customCheck1" />
                       </div>
                     </th>
-                    <th>Purchase ID</th>
-                    <th>Buyer Name</th>
+                    <th>Vendor ID</th>
+                    <th>Vendor Name</th>
                     <th>Invoice</th>
                     <th>Purchase Date</th>
-                    <th>Total Amount</th>
-                    <th>Payment Method</th>
-                    <th>Payment Status</th>
+                    {/* <th>Total Amount</th> */}
+                    {/* <th>Payment Method</th> */}
+                    <th>Application Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -71,8 +71,8 @@ const Transaction = async () => {
                       month: 'short',
                       year: 'numeric'
                     })}</td>
-                      <td> ${item.amount}</td>
-                      <td> {item.paymentType}</td>
+                      {/* <td> ${item.amount}</td> */}
+                      {/* <td> {item.paymentType}</td> */}
                       <td>
                         {' '}
                         <span className={`badge bg-${item.paymentStatus == 'Cancel' ? 'danger' : item.paymentStatus == 'Pending' ? 'warning' : 'success'}-subtle text-${item.paymentStatus == 'Cancel' ? 'danger' : item.paymentStatus == 'Pending' ? 'warning' : 'success'} py-1 px-2 fs-12`}>

@@ -12,11 +12,11 @@ const AnalyticsPage = () => {
   return <>
       <PageTitle title="Analytics" subName="Dashboard" />
       <Statistics />
-      <Row>
+      <Row className='d-none'>
         <SalesChart />
         <BalanceCard />
       </Row>
-      <SocialSource />
+      {/* <SocialSource  /> */}
       <Transaction />
     </>;
 };

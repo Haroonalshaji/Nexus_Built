@@ -5,5 +5,6 @@ export const metadata = {
 };
 const SignInPage = () => {
   return <SignIn />;
+  
 };
 export default SignInPage;
