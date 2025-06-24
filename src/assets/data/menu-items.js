@@ -11,39 +11,41 @@ export const MENU_ITEMS = [{
     label: 'Analytics',
     url: '/dashboards/analytics',
     parentKey: 'dashboards'
-  }, {
-    key: 'agent',
-    label: 'Agent',
-    url: '/dashboards/agent',
-    parentKey: 'dashboards'
-  }, {
-    key: 'customer',
-    label: 'Customer',
-    url: '/dashboards/customer',
-    parentKey: 'dashboards'
-  }]
+  },
+    //  {
+    //   key: 'agent',
+    //   label: 'Agent',
+    //   url: '/dashboards/agent',
+    //   parentKey: 'dashboards'
+    // }, {
+    //   key: 'customer',
+    //   label: 'Customer',
+    //   url: '/dashboards/customer',
+    //   parentKey: 'dashboards'
+    // }
+  ]
 }, {
   key: 'property',
-  label: 'Property',
-  icon: 'ri:community-line',
+  label: 'Categories',
+  icon: 'iconamoon:category-light',
   children: [{
     key: 'property-grid',
-    label: 'Property Grid',
+    label: 'Category Grid',
     url: '/property/grid',
     parentKey: 'property'
   }, {
     key: 'property-list',
-    label: 'Property List',
+    label: 'Category List',
     url: '/property/list',
     parentKey: 'property'
   }, {
     key: 'property-details',
-    label: 'Property Details',
+    label: 'Category Details',
     url: '/property/details',
     parentKey: 'property'
   }, {
     key: 'add-property',
-    label: 'Add Property',
+    label: 'Add Category',
     url: '/property/add',
     parentKey: 'property'
   }]
@@ -235,11 +237,8 @@ export const MENU_ITEMS = [{
     variant: 'danger'
   },
   url: '/widgets'
-},];
-
-
-// these are the menu sys_that made hidden 
-const disabedMenus = [{
+},
+{
   key: 'Components',
   label: 'COMPONENTS',
   isTitle: true
@@ -603,4 +602,9 @@ const disabedMenus = [{
   key: ' Disable Item',
   label: ' Disable Item',
   icon: 'ri:prohibited-2-line'
-}]
+}
+];
+
+
+// these are the menu sys_that made hidden 
+const disabedMenus = []

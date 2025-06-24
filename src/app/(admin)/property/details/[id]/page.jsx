@@ -1,15 +1,17 @@
+"use client"
 import PageTitle from '@/components/PageTitle';
 import OwnerDetails from '../components/OwnerDetails'
 import PropertyDetails from '../components/PropertyDetails';
 import { Col, Row } from 'react-bootstrap';
 import { getAllProperty } from '../../../../../helpers/data';
-export const metadata = {
-  title: 'Property Overview'
-};
-const PropertyDetailsPage = async ({params}) => {
-  const id = params.id;
+import { useParams } from 'next/navigation';
+
+const PropertyDetailsPage = async () => {
+  const paramsId = useParams();
+  console.log(paramsId);
+  
   const propertyList = await getAllProperty();
-  const property = propertyList.find((p) => p.id.toString() === id.toString());
+  const property = propertyList.find((p) => p.id.toString() === paramsId?.id.toString());
 
   if (!property) {
     return <div>Property not found</div>;

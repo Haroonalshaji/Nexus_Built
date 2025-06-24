@@ -1,12 +1,12 @@
 import { currency } from '@/context/constants';
 export const statisticData = [{
   icon: 'solar:buildings-2-broken',
-  title: 'No. of Properties',
+  title: 'No. of Vendors',
   amount: '2,854',
   change: 7.34
 }, {
   icon: 'solar:users-group-two-rounded-broken',
-  title: 'Regi. Agents',
+  title: 'Regi. Vendors',
   amount: '705',
   change: 76.89
 }, {

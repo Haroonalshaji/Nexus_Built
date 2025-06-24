@@ -10,9 +10,9 @@ const PropertyAddPage = () => {
   return <>
       <PageTitle title="Add Property" subName="Real Estate" />
       <Row>
-        <PropertyAddCard />
+        {/* <PropertyAddCard className="d-none"/> */}
         <Col xl={9} lg={8}>
-          <FileUpload title="Add Property Photo" />
+          {/* <FileUpload className="d-none" title="Add Property Photo" /> */}
           <PropertyAdd />
         </Col>
       </Row>
