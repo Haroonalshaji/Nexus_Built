@@ -1,7 +1,7 @@
 'use client';
 
-import logoDark from '@/assets/images/logo-dark.png';
-import LogoLight from '@/assets/images/logo-light.png';
+import logoDark from '@/assets/images/nexus_logo_no_bg.png';
+import LogoLight from '@/assets/images/nexus_logo_no_bg.png';
 import TextFormInput from '@/components/from/TextFormInput';
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -55,10 +55,10 @@ const SignUp = () => {
             <CardBody className="px-3 py-5">
               <div className="mx-auto mb-4 text-center auth-logo">
                 <Link href="/dashboards/analytics" className="logo-dark">
-                  <Image src={logoDark} height={32} alt="logo dark" />
+                  <Image src={logoDark} height={50} alt="logo dark" />
                 </Link>
                 <Link href="/dashboards/analytics" className="logo-light">
-                  <Image src={LogoLight} height={28} alt="logo light" />
+                  <Image src={LogoLight} height={50} alt="logo light" />
                 </Link>
               </div>
               <h2 className="fw-bold text-uppercase text-center fs-18">Free Account</h2>

@@ -138,7 +138,7 @@ const VendorClient = ({ transaction }) => {
                                             </td>
                                             <td>
                                                 <div className="d-flex gap-2">
-                                                    <Button variant="success" size="sm" onClick={() => handleShow('approve', item.id)}>
+                                                    <Button variant="success" size="sm" onClick={() => handleShow('approve', item.id)} disabled={item.paymentStatus === 'Completed'}>
                                                         <IconifyIcon icon="solar:check-circle-bold" className="align-middle fs-18 me-1" />
                                                         Approve
                                                     </Button>

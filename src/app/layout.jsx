@@ -1,4 +1,4 @@
-import logoDark from '@/assets/images/logo-dark.png';
+import logoDark from '@/assets/images/nexus_logo.png';
 import AppProvidersWrapper from '@/components/wrappers/AppProvidersWrapper';
 import { Figtree } from 'next/font/google';
 import Image from 'next/image';
@@ -57,7 +57,7 @@ export default function RootLayout({
       <body className={figtree.className}>
         <div id="splash-screen">
           <Image alt="Logo" width={112} height={24} src={logoDark} style={{
-          height: '6%',
+          height: '10%',
           width: 'auto'
         }} priority />
         </div>

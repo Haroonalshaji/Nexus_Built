@@ -9,6 +9,24 @@ import { useNotificationContext } from '@/context/useNotificationContext';
 import useQueryParams from '@/hooks/useQueryParams';
 import axios from 'axios';
 
+const SESSION_KEY = 'userSession';
+
+// Store user info in sessionStorage
+const storeUserSession = (user) => {
+  if (typeof window !== 'undefined') {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(user));
+  }
+};
+
+// Check if user exists in sessionStorage
+const getUserSession = () => {
+  if (typeof window !== 'undefined') {
+    const user = sessionStorage.getItem(SESSION_KEY);
+    return user ? JSON.parse(user) : null;
+  }
+  return null;
+};
+
 const useSignIn = () => {
   const [loading, setLoading] = useState(false);
   const { push } = useRouter();
@@ -54,6 +72,11 @@ const useSignIn = () => {
       //   });
       // }
 
+      if(values){
+        // Store user info in sessionStorage
+        storeUserSession({ email: values.email });
+      }
+
       push(queryParams['redirectTo'] ?? '/dashboards/analytics');
     } catch (error) {
       showNotification({
@@ -68,7 +91,8 @@ const useSignIn = () => {
   return {
     loading,
     login,
-    control
+    control,
+    getUserSession
   };
 };
 
