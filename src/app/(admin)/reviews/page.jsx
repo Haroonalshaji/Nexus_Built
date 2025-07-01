@@ -337,7 +337,7 @@ const ReviewsPage = () => {
                 {editMode ? (
                   <textarea name="description" value={editFields.description} onChange={handleEditChange} className="form-control" />
                 ) : (
-                  <span>"{selectedReview.review.description}"</span>
+                  <span>&quot;{selectedReview.review.description}&quot;</span>
                 )}
               </div>
             </div>
