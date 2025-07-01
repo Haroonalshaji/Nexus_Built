@@ -135,24 +135,26 @@ export const MENU_ITEMS = [{
 // },
  {
   key: 'post',
-  label: 'Post',
+  label: 'Export Data',
   icon: 'ri:news-line',
   children: [{
     key: 'post',
-    label: 'Post',
+    label: 'Print Data',
     url: '/post',
     parentKey: 'post'
-  }, {
-    key: 'post-details',
-    label: 'Post Details',
-    url: '/post/details',
-    parentKey: 'post'
-  }, {
-    key: 'create-post',
-    label: 'Create Post',
-    url: '/post/create',
-    parentKey: 'post'
-  }]
+  }, 
+  // {
+  //   key: 'post-details',
+  //   label: 'Post Details',
+  //   url: '/post/details',
+  //   parentKey: 'post'
+  // }, {
+  //   key: 'create-post',
+  //   label: 'Create Post',
+  //   url: '/post/create',
+  //   parentKey: 'post'
+  // }
+]
 },
 
 ];

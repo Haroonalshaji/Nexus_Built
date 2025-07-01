@@ -7,10 +7,11 @@ const ComponentContainerCard = ({
   description,
   children,
   titleClass,
-  descriptionClass
+  descriptionClass,
+  className
 }) => {
-  return <Card>
-      <CardBody>
+  return <Card className={clsx('bg-dark text-light', className)}>
+      <CardBody className="bg-dark text-light">
         <CardTitle as={'h5'} className={clsx('anchor mb-1', titleClass)} id={id}>
           {title}
           <Link className="anchor-link" href={`#${id}`}>

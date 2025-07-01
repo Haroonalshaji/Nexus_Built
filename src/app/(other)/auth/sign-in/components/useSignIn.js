@@ -12,9 +12,9 @@ import axios from 'axios';
 const SESSION_KEY = 'userSession';
 
 // Store user info in sessionStorage
-const storeUserSession = (user) => {
+const storeUserSession = (user,password) => {
   if (typeof window !== 'undefined') {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(user));
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(user,password));
   }
 };
 
@@ -74,7 +74,7 @@ const useSignIn = () => {
 
       if(values){
         // Store user info in sessionStorage
-        storeUserSession({ email: values.email });
+        storeUserSession({ email: values.email,password: values.password });
       }
 
       push(queryParams['redirectTo'] ?? '/dashboards/analytics');

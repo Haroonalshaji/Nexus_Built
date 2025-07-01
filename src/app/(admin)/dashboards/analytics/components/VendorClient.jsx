@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -10,8 +10,12 @@ import {
 } from 'react-bootstrap';
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
 import { transactionData } from '@/assets/data/other';
+import useQueryParams from '@/hooks/useQueryParams';
+import { useRouter } from 'next/navigation';
 
 const VendorClient = ({ transaction }) => {
+    const queryParams = useQueryParams();
+    const { push } = useRouter();
     const [showModal, setShowModal] = useState(false);
     const [actionType, setActionType] = useState('');
     const [comment, setComment] = useState('');
@@ -43,6 +47,21 @@ const VendorClient = ({ transaction }) => {
         console.log(`Action: ${actionType}, ID: ${selectedId}, Comment: ${comment}`);
         handleClose();
     };
+
+    const searchForUser = () => {
+        var user = sessionStorage.getItem('userSession');
+        console.log(user);
+        user = JSON.parse(user);
+        if (user == "" || user == null || user == undefined) {
+            push(queryParams['redirectTo'] ?? '/auth/sign-in');
+        }
+        console.log(user);
+        return user;
+    }
+
+    useEffect(() => {
+        searchForUser();
+    }, []);
 
     const renderPagination = () => (
         <div className="d-flex justify-content-center px-3 py-2">

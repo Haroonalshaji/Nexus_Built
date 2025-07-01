@@ -1,10 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button, Card, CardBody, CardHeader, CardTitle, Col, Row, Form, Modal, Alert } from "react-bootstrap"
-import IconifyIcon from "@/components/wrappers/IconifyIcon"
+import IconifyIcon from "@/components/wrappers/IconifyIcon";
+import useQueryParams from "@/hooks/useQueryParams";
+import { useRouter } from "next/navigation";
 
 const ConstructionCategoriesAdmin = () => {
+  const queryParams = useQueryParams();
+  const { push } = useRouter();
+
   const initialCategories = [
     {
       id: "1",
@@ -196,6 +201,21 @@ const ConstructionCategoriesAdmin = () => {
       handleDeleteSubcategory(deleteTarget.categoryId, deleteTarget.subcategoryId)
     }
   }
+
+  const searchForUser = () => {
+    var user = sessionStorage.getItem('userSession');
+    console.log(user);
+    user = JSON.parse(user);
+    if (user == "" || user == null || user == undefined) {
+      push(queryParams['redirectTo'] ?? '/auth/sign-in');
+    }
+    console.log(user);
+    return user;
+  }
+
+  useEffect(() => {
+    searchForUser();
+  }, []);
 
   const totalSubcategories = categories.reduce((total, cat) => total + cat.subcategories.length, 0)
   const maxSubcategories = Math.max(...categories.map((cat) => cat.subcategories.length), 0)
