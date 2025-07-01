@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useNavigate } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -17,6 +17,8 @@ const storeUserSession = (user,password) => {
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(user,password));
   }
 };
+
+const navigate = useNavigate();
 
 // Check if user exists in sessionStorage
 const getUserSession = () => {
@@ -78,6 +80,7 @@ const useSignIn = () => {
       }
 
       push(queryParams['redirectTo'] ?? '/dashboards/analytics');
+      navigate('/dashboards/analytics');
     } catch (error) {
       showNotification({
         message: error.response?.data?.message || 'Login failed',
