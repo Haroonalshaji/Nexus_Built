@@ -77,6 +77,8 @@ const useSignIn = () => {
         storeUserSession({ email: values.email,password: values.password });
       }
 
+      console.log(values);
+
       push('/dashboards/analytics');
     } catch (error) {
       showNotification({
