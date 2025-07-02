@@ -235,7 +235,7 @@ const ConstructionCategoriesAdmin = () => {
         {/* Main Categories Panel */}
         <Col lg={8}>
           <Card>
-            <CardHeader className="d-flex justify-content-between align-items-center">
+            <CardHeader className="d-flex flex-wrap gap-2 justify-content-between align-items-center">
               <div>
                 <CardTitle as="h4">Service Categories</CardTitle>
                 <p className="text-muted mb-0">Manage construction service categories and their subcategories</p>
@@ -249,7 +249,7 @@ const ConstructionCategoriesAdmin = () => {
               {categories.map((category) => (
                 <Card key={category.id} className="mb-3 border">
                   <CardBody>
-                    <div className="d-flex justify-content-between align-items-start mb-2">
+                    <div className="d-flex flex-wrap gap-2 justify-content-md-between justify-content-center align-items-center mb-2">
                       <div className="d-flex align-items-center">
                         <Button
                           variant="link"
@@ -295,7 +295,7 @@ const ConstructionCategoriesAdmin = () => {
                           category.subcategories.map((subcategory) => (
                             <div
                               key={subcategory.id}
-                              className="d-flex justify-content-between align-items-center p-3 bg-light rounded mb-2"
+                              className="d-flex flex-wrap gap-2 justify-content-md-between justify-content-center align-items-center p-3 bg-light rounded mb-2"
                             >
                               <div>
                                 <h6 className="mb-1">{subcategory.name}</h6>
