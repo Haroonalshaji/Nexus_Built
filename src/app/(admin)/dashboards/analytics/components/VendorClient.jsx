@@ -53,7 +53,7 @@ const VendorClient = ({ transaction }) => {
         console.log(user);
         user = JSON.parse(user);
         if (user == "" || user == null || user == undefined) {
-            push(queryParams['redirectTo'] ?? '/auth/sign-in');
+            push('/auth/sign-in');
         }
         console.log(user);
         return user;
