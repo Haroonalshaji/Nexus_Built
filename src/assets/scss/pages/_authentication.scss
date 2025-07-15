@@ -70,3 +70,12 @@ p.no-span {
           left: 1.5%;
      }
 }
+
+.footer {
+     .logo-dark { display: block; }
+     .logo-light { display: none; }
+     html[data-bs-theme="dark"] & {
+       .logo-dark { display: none; }
+       .logo-light { display: block; }
+     }
+   }

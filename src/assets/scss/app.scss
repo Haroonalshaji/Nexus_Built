@@ -79,3 +79,18 @@
 @import "pages/pricing";
 @import "pages/timeline";
 @import "pages/custom-react";
+
+.footer .logo-dark {
+  display: block;
+}
+.footer .logo-light {
+  display: none;
+}
+
+html[data-bs-theme="dark"] .footer .logo-dark {
+  display: none;
+}
+html[data-bs-theme="dark"] .footer .logo-light {
+  display: block;
+}
+
