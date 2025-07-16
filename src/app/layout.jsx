@@ -12,10 +12,10 @@ const figtree = Figtree({
 });
 export const metadata = {
   title: {
-    template: '%s | Lahomes Nextjs - Real Estate Management Admin Template',
+    template: '%s | Nexus Built ',
     default: DEFAULT_PAGE_TITLE
   },
-  description: 'A fully responsive premium admin dashboard template, Real Estate Management Admin Template'
+  description: 'The Place Wehere you can find your Builder'
 };
 const splashScreenStyles = `
 #splash-screen {
