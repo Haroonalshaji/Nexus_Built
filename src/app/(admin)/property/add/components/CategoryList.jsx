@@ -251,7 +251,7 @@ const ConstructionCategoriesAdmin = () => {
                   <CardBody>
                     <div className="d-flex flex-wrap gap-2 justify-content-md-between justify-content-center align-items-center mb-2">
                       <div className="d-flex align-items-center">
-                        <Button
+                        {/* <Button
                           variant="link"
                           size="sm"
                           className="p-0 me-2"
@@ -261,7 +261,7 @@ const ConstructionCategoriesAdmin = () => {
                             icon={category.isExpanded ? "mdi:chevron-down" : "mdi:chevron-right"}
                             className="fs-5"
                           />
-                        </Button>
+                        </Button> */}
                         <div>
                           <h5 className="mb-1">{category.name}</h5>
                           <p className="text-muted mb-0 small">{category.description}</p>
@@ -269,13 +269,13 @@ const ConstructionCategoriesAdmin = () => {
                         <span className="badge bg-secondary ms-3">{category.subcategories.length} subcategories</span>
                       </div>
                       <div className="d-flex gap-2">
-                        <Button
+                        {/* <Button
                           variant="outline-primary"
                           size="sm"
                           onClick={() => openAddSubcategoryDialog(category.id)}
                         >
                           <IconifyIcon icon="mdi:plus" />
-                        </Button>
+                        </Button> */}
                         <Button variant="outline-secondary" size="sm" onClick={() => openEditCategoryDialog(category)}>
                           <IconifyIcon icon="mdi:pencil" />
                         </Button>
@@ -289,7 +289,7 @@ const ConstructionCategoriesAdmin = () => {
                       </div>
                     </div>
 
-                    {category.isExpanded && (
+                    {/* {category.isExpanded && (
                       <div className="ms-4 mt-3">
                         {category.subcategories.length > 0 ? (
                           category.subcategories.map((subcategory) => (
@@ -323,7 +323,7 @@ const ConstructionCategoriesAdmin = () => {
                           <p className="text-muted fst-italic">No subcategories yet</p>
                         )}
                       </div>
-                    )}
+                    )} */}
                   </CardBody>
                 </Card>
               ))}
@@ -342,7 +342,7 @@ const ConstructionCategoriesAdmin = () => {
                 <span className="fw-medium">Total Categories</span>
                 <span className="badge bg-primary">{categories.length}</span>
               </div>
-              <div className="d-flex justify-content-between align-items-center mb-3">
+              <div className="d-none justify-content-between align-items-center mb-3">
                 <span className="fw-medium">Total Subcategories</span>
                 <span className="badge bg-primary">{totalSubcategories}</span>
               </div>

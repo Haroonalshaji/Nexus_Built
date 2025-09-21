@@ -80,12 +80,12 @@ const TransactionData = () => {
                           <div className="d-flex align-items-center gap-2">
                             <Link href="" className="rounded-circle">
                               <div className="position-relative">
-                                {item.user?.avatar && <Image src={item.user.avatar} alt="avatar" className="avatar-sm rounded-circle flex-shrink-0 " />}
-                                <span className="position-absolute bottom-0 end-0  rounded-circle">
+                                {/* {item.user?.avatar && <Image src={item.user.avatar} alt="avatar" className="avatar-sm rounded-circle flex-shrink-0 " />} */}
+                                {/* <span className="position-absolute bottom-0 end-0  rounded-circle">
                                   <span>
                                     <IconifyIcon icon="ri:circle-fill" className={`fs-10 align-bottom text-${item.paymentStatus == 'Cancel' ? 'danger' : item.paymentStatus == 'Pending' ? 'warning' : 'success'} bg-light rounded-circle`} />
                                   </span>
-                                </span>
+                                </span> */}
                               </div>
                             </Link>
                             <div>

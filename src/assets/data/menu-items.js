@@ -9,7 +9,8 @@ export const MENU_ITEMS = [{
   children: [{
     key: 'analytics',
     label: 'Analytics',
-    url: '/dashboards/analytics',
+    // url: '/dashboards/analytics',
+    url: '/pendingapproval',
     parentKey: 'dashboards'
   },
     //  {
@@ -51,6 +52,12 @@ export const MENU_ITEMS = [{
       url: '/property/add',
       parentKey: 'property'
     }]
+},
+{
+  key: 'subscriptions',
+  label: 'Subscriptions',
+  icon: 'ri:vip-crown-line',
+  url: '/subscriptions'
 },
 // {
 //   key: 'agents',
@@ -121,7 +128,7 @@ export const MENU_ITEMS = [{
   label: 'Enquiries',
   icon: 'ri:chat-quote-line',
   url: '/reviews'
-}, 
+},
 // {
 //   key: 'messages',
 //   label: 'Messages',
@@ -133,7 +140,7 @@ export const MENU_ITEMS = [{
 //   icon: 'ri:inbox-line',
 //   url: '/inbox'
 // },
- {
+{
   key: 'post',
   label: 'Export Data',
   icon: 'ri:news-line',
@@ -142,19 +149,19 @@ export const MENU_ITEMS = [{
     label: 'Print Data',
     url: '/post',
     parentKey: 'post'
-  }, 
-  // {
-  //   key: 'post-details',
-  //   label: 'Post Details',
-  //   url: '/post/details',
-  //   parentKey: 'post'
-  // }, {
-  //   key: 'create-post',
-  //   label: 'Create Post',
-  //   url: '/post/create',
-  //   parentKey: 'post'
-  // }
-]
+  },
+    // {
+    //   key: 'post-details',
+    //   label: 'Post Details',
+    //   url: '/post/details',
+    //   parentKey: 'post'
+    // }, {
+    //   key: 'create-post',
+    //   label: 'Create Post',
+    //   url: '/post/create',
+    //   parentKey: 'post'
+    // }
+  ]
 },
 
 ];

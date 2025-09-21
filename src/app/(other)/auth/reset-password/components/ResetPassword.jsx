@@ -1,7 +1,7 @@
 'use client';
 
-import logoDark from '@/assets/images/logo-dark.png';
-import LogoLight from '@/assets/images/logo-light.png';
+import logoDark from '@/assets/images/nexus_logo_no_bg.png';
+import LogoLight from '@/assets/images/nexus_logo_no_bg.png';
 import TextFormInput from '@/components/from/TextFormInput';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Image from 'next/image';

@@ -1,32 +1,46 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
-    Button, Modal, Form, Card, CardBody, CardHeader,
-    CardTitle, Col, Dropdown, DropdownItem, DropdownMenu,
-    DropdownToggle, Row
-} from 'react-bootstrap';
-import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { transactionData } from '@/assets/data/other';
-import useQueryParams from '@/hooks/useQueryParams';
-import { useRouter } from 'next/navigation';
+    Button,
+    Modal,
+    Form,
+    Card,
+    CardBody,
+    CardHeader,
+    CardTitle,
+    Col,
+    Dropdown,
+    DropdownItem,
+    DropdownMenu,
+    DropdownToggle,
+    Row,
+} from "react-bootstrap";
+import IconifyIcon from "@/components/wrappers/IconifyIcon";
+import { useRouter } from "next/navigation";
+import { approveVendorApplication, getPendingVendorApplications, rejectVendorApplication } from "@/utils/apiCalls/commonApi";
 
-const VendorClient = ({ transaction }) => {
-    const queryParams = useQueryParams();
+const VendorClient = () => {
     const { push } = useRouter();
     const [showModal, setShowModal] = useState(false);
-    const [actionType, setActionType] = useState('');
-    const [comment, setComment] = useState('');
+    const [actionType, setActionType] = useState("");
+    const [comment, setComment] = useState("");
     const [selectedId, setSelectedId] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    // 🚀 store API vendors here
+    const [vendors, setVendors] = useState([]);
+
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
-    const totalVendorsListed = Math.ceil(transaction.length / itemsPerPage);
-    const currentData = transaction.slice(
+
+    const totalVendorsListed = Math.ceil(vendors.length / itemsPerPage);
+    const currentData = vendors.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
+
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
@@ -39,25 +53,45 @@ const VendorClient = ({ transaction }) => {
 
     const handleClose = () => {
         setShowModal(false);
-        setComment('');
+        setComment("");
         setSelectedId(null);
     };
 
-    const handleSubmit = () => {
-        console.log(`Action: ${actionType}, ID: ${selectedId}, Comment: ${comment}`);
-        handleClose();
+    const handleSubmit = async () => {
+        try {
+            setLoading(true);
+            if (actionType === "approve") {
+                const approvedResponse = await approveVendorApplication(selectedId);
+                console.log(`Approved vendor ${approvedResponse}`);
+            } else if (actionType === "reject") {
+                const rejectedResponse = await rejectVendorApplication(selectedId);
+                console.log(`Rejected vendor ${rejectedResponse}`);
+            }
+
+            // Refresh the vendor list after action
+            await searchForUser();
+
+        } catch (error) {
+            console.error("Error processing request:", error);
+        } finally {
+            handleClose();
+            setLoading(false);
+        }
     };
 
-    const searchForUser = () => {
-        var user = sessionStorage.getItem('userSession');
-        console.log(user);
-        user = JSON.parse(user);
-        if (user == "" || user == null || user == undefined) {
-            push('/auth/sign-in');
+    const searchForUser = async () => {
+        try {
+            setLoading(true);
+            const listOfPendingApproval = await getPendingVendorApplications();
+            console.log(listOfPendingApproval.data.result);
+            setVendors(listOfPendingApproval.data.result || []);
+        } catch (error) {
+            console.error(error);
+            setLoading(false)
+        } finally {
+            setLoading(false)
         }
-        console.log(user);
-        return user;
-    }
+    };
 
     useEffect(() => {
         searchForUser();
@@ -67,20 +101,38 @@ const VendorClient = ({ transaction }) => {
         <div className="d-flex justify-content-center px-3 py-2">
             <nav>
                 <ul className="pagination pagination-sm mb-0">
-                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>
+                    <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                        <button
+                            className="page-link"
+                            onClick={() => handlePageChange(currentPage - 1)}
+                        >
                             Previous
                         </button>
                     </li>
-                    {Array.from({ length: totalVendorsListed }, (_, i) => i + 1).map((page) => (
-                        <li key={page} className={`page-item ${page === currentPage ? 'active' : ''}`}>
-                            <button className="page-link" onClick={() => handlePageChange(page)}>
-                                {page}
-                            </button>
-                        </li>
-                    ))}
-                    <li className={`page-item ${currentPage === totalVendorsListed ? 'disabled' : ''}`}>
-                        <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>
+                    {Array.from({ length: totalVendorsListed }, (_, i) => i + 1).map(
+                        (page) => (
+                            <li
+                                key={page}
+                                className={`page-item ${page === currentPage ? "active" : ""
+                                    }`}
+                            >
+                                <button
+                                    className="page-link"
+                                    onClick={() => handlePageChange(page)}
+                                >
+                                    {page}
+                                </button>
+                            </li>
+                        )
+                    )}
+                    <li
+                        className={`page-item ${currentPage === totalVendorsListed ? "disabled" : ""
+                            }`}
+                    >
+                        <button
+                            className="page-link"
+                            onClick={() => handlePageChange(currentPage + 1)}
+                        >
                             Next
                         </button>
                     </li>
@@ -94,87 +146,142 @@ const VendorClient = ({ transaction }) => {
             <Col xl={12}>
                 <Card>
                     <CardHeader className="d-flex justify-content-between align-items-center">
-                        <CardTitle as={'h4'}>Latest Vendor Applications</CardTitle>
-                        <Dropdown>
-                            <DropdownToggle as={'a'} className="btn btn-sm btn-outline-light rounded content-none icons-center">
-                                This Month <IconifyIcon className="ms-1" width={16} height={16} icon="ri:arrow-down-s-line" />
-                            </DropdownToggle>
-                            <DropdownMenu className="dropdown-menu-end">
-                                <DropdownItem>Week</DropdownItem>
-                                <DropdownItem>Months</DropdownItem>
-                                <DropdownItem>Years</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
+                        <CardTitle as={"h4"}>Latest Vendor Applications</CardTitle>
                     </CardHeader>
 
                     <CardBody className="p-0">
-                        <div className="table-responsive">
-                            <table className="table align-middle text-nowrap table-hover table-centered mb-0">
-                                <thead className="bg-light-subtle">
-                                    <tr>
-                                        <th style={{ width: 20 }}>
-                                            <div className="form-check">
-                                                <input type="checkbox" className="form-check-input" id="customCheck1" />
-                                                <label className="form-check-label" htmlFor="customCheck1" />
-                                            </div>
-                                        </th>
-                                        <th>Vendor ID</th>
-                                        <th>Vendor Name</th>
-                                        <th>Invoice</th>
-                                        <th>Purchase Date</th>
-                                        <th>Application Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {currentData.map((item, idx) => (
-                                        <tr key={idx}>
-                                            <td>
-                                                <div className="form-check">
-                                                    <input type="checkbox" className="form-check-input" id={`customCheck${idx}`} />
-                                                    <label className="form-check-label" htmlFor={`customCheck${idx}`}>&nbsp;</label>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <Link href="#" className="text-dark fw-medium">#{item.id}</Link>
-                                            </td>
-                                            <td>
-                                                {item.user?.avatar && (
-                                                    <Image src={item.user.avatar} className="avatar-sm rounded-circle me-2" alt="avatar" width={32} height={32} />
-                                                )}
-                                                {item.user?.name}
-                                            </td>
-                                            <td>IN-4563</td>
-                                            <td>{new Date(item.purchaseDate).toLocaleDateString('en-US', {
-                                                day: 'numeric',
-                                                month: 'short',
-                                                year: 'numeric'
-                                            })}</td>
-                                            <td>
-                                                <span className={`badge bg-${item.paymentStatus === 'Cancel' ? 'danger' : item.paymentStatus === 'Pending' ? 'warning' : 'success'}-subtle text-${item.paymentStatus === 'Cancel' ? 'danger' : item.paymentStatus === 'Pending' ? 'warning' : 'success'} py-1 px-2 fs-12`}>
-                                                    {item.paymentStatus}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div className="d-flex gap-2">
-                                                    <Button variant="success" size="sm" onClick={() => handleShow('approve', item.id)} disabled={item.paymentStatus === 'Completed'}>
-                                                        <IconifyIcon icon="solar:check-circle-bold" className="align-middle fs-18 me-1" />
-                                                        Approve
-                                                    </Button>
-                                                    <Button variant="danger" size="sm" onClick={() => handleShow('reject', item.id)}>
-                                                        <IconifyIcon icon="solar:close-circle-bold" className="align-middle fs-18 me-1" />
-                                                        Reject
-                                                    </Button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="mt-5">
-                            {renderPagination()}
-                        </div>
+                        {loading ? (
+                            <div className="d-flex justify-content-center align-items-center py-5">
+                                <div className="spinner-border text-primary" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                <div className="table-responsive">
+                                    <table className="table align-middle text-nowrap table-hover table-centered mb-0">
+                                        <thead className="bg-light-subtle">
+                                            <tr>
+                                                <th style={{ width: 20 }}>
+                                                    <div className="form-check">
+                                                        <input
+                                                            type="checkbox"
+                                                            className="form-check-input"
+                                                            id="customCheck1"
+                                                        />
+                                                        <label
+                                                            className="form-check-label"
+                                                            htmlFor="customCheck1"
+                                                        />
+                                                    </div>
+                                                </th>
+                                                <th>Vendor ID</th>
+                                                <th>Vendor Name</th>
+                                                <th>Vendor Email</th>
+                                                <th>Business Name</th>
+                                                <th>Registered On</th>
+                                                <th>Experience</th>
+                                                <th>Application Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {currentData.map((item, idx) => (
+                                                <tr key={idx}>
+                                                    <td>
+                                                        <div className="form-check">
+                                                            <input
+                                                                type="checkbox"
+                                                                className="form-check-input"
+                                                                id={`customCheck${idx}`}
+                                                            />
+                                                            <label
+                                                                className="form-check-label"
+                                                                htmlFor={`customCheck${idx}`}
+                                                            >
+                                                                &nbsp;
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <Link href="#" className="text-dark fw-medium">
+                                                            #{item.vendorGuid
+                                                                ? `${item.vendorGuid.substring(0, 6)}...${item.vendorGuid.slice(-4)}`
+                                                                : ""}
+                                                        </Link>
+                                                    </td>
+                                                    <td>
+                                                        {item.firstName} {item.lastName}
+                                                    </td>
+                                                    <td>{item.emailAddress}</td>
+                                                    <td>{item.businessName}</td>
+                                                    <td>
+                                                        {item.registeredOn &&
+                                                            item.registeredOn !== "0001-01-01T00:00:00"
+                                                            ? new Date(item.registeredOn).toLocaleDateString(
+                                                                "en-US",
+                                                                {
+                                                                    day: "numeric",
+                                                                    month: "short",
+                                                                    year: "numeric",
+                                                                }
+                                                            )
+                                                            : "N/A"}
+                                                    </td>
+                                                    <td>{item.yearsOfExperience}</td>
+                                                    <td>
+                                                        <span
+                                                            className={`badge bg-${item.businessStatus === "PendingVerification"
+                                                                ? "warning"
+                                                                : "success"
+                                                                }-subtle text-${item.businessStatus === "PendingVerification"
+                                                                    ? "warning"
+                                                                    : "success"
+                                                                } py-1 px-2 fs-12`}
+                                                        >
+                                                            {item.businessStatus}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div className="d-flex gap-2">
+                                                            <Button
+                                                                variant="success"
+                                                                size="sm"
+                                                                onClick={() =>
+                                                                    handleShow("approve", item.businessGuid)
+                                                                }
+                                                                disabled={item.businessStatus === "Approved"}
+                                                            >
+                                                                <IconifyIcon
+                                                                    icon="solar:check-circle-bold"
+                                                                    className="align-middle fs-18 me-1"
+                                                                />
+                                                                Approve
+                                                            </Button>
+                                                            <Button
+                                                                variant="danger"
+                                                                size="sm"
+                                                                onClick={() =>
+                                                                    handleShow("reject", item.businessGuid)
+                                                                }
+                                                                disabled={item.businessStatus === "Approved"}
+                                                            >
+                                                                <IconifyIcon
+                                                                    icon="solar:close-circle-bold"
+                                                                    className="align-middle fs-18 me-1"
+                                                                />
+                                                                Block
+                                                            </Button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className="mt-5">{renderPagination()}</div>
+                            </>
+                        )}
                     </CardBody>
                 </Card>
             </Col>
@@ -182,7 +289,9 @@ const VendorClient = ({ transaction }) => {
             {/* Modal */}
             <Modal show={showModal} onHide={handleClose} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>{actionType === 'approve' ? 'Approve' : 'Reject'} Request</Modal.Title>
+                    <Modal.Title>
+                        {actionType === "approve" ? "Approve" : "Reject"} Request
+                    </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group>
@@ -198,9 +307,14 @@ const VendorClient = ({ transaction }) => {
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-                    <Button variant={actionType === 'approve' ? 'success' : 'danger'} onClick={handleSubmit}>
-                        {actionType === 'approve' ? 'Approve' : 'Reject'}
+                    <Button variant="secondary" onClick={handleClose}>
+                        Cancel
+                    </Button>
+                    <Button
+                        variant={actionType === "approve" ? "success" : "danger"}
+                        onClick={handleSubmit}
+                    >
+                        {actionType === "approve" ? "Approve" : "Reject"}
                     </Button>
                 </Modal.Footer>
             </Modal>

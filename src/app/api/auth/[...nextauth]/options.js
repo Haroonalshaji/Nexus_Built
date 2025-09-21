@@ -1,5 +1,6 @@
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { randomBytes } from 'crypto';
+import { adminLogin } from '@/utils/apiCalls/auth';
 export const fakeUsers = [{
   id: '1',
   email: 'user@demo.com',
@@ -25,11 +26,13 @@ export const options = {
       }
     },
     async authorize(credentials, req) {
-      const filteredUser = fakeUsers.find(user => {
-        return user.email === credentials?.email && user.password === credentials?.password;
-      });
-      if (filteredUser) {
-        return filteredUser;
+      const RetData = await adminLogin({
+        "emailId": credentials?.email,
+        "password": credentials?.password
+      })
+      console.log(RetData.data)
+      if (RetData) {
+        return RetData;
       } else {
         throw new Error('Email or Password is not valid');
       }
