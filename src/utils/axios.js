@@ -30,6 +30,9 @@ api.interceptors.response.use(
         if (error.response?.status === 401) {
             // Handle token expiration, refresh, or logout
             console.error("Unauthorized! Redirect to login or refresh token.");
+            if (typeof window !== "undefined") {
+                window.location.href = "/auth/sign-in"; // safe redirect outside React
+            }
         }
         return Promise.reject(error);
     }
