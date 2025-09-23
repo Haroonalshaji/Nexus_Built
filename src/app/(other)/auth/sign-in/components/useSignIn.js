@@ -33,9 +33,9 @@ const getUserSession = () => {
 
 const useSignIn = () => {
   const [loading, setLoading] = useState(false);
-  const { push } = useRouter();
   const { showNotification } = useNotificationContext();
   const queryParams = useQueryParams();
+  const router = useRouter();
 
   const loginFormSchema = yup.object({
     email: yup.string().email('Please enter a valid email').required('Please enter your email'),
@@ -154,7 +154,9 @@ const useSignIn = () => {
             message: `✅  ${RetData.message}`,
             variant: "success",
           })
-          push(queryParams['redirectTo'] ?? '/pendingapproval');
+          // push(queryParams['redirectTo'] ?? '/pendingapproval');
+          router.push("/pendingapproval")
+
           // Navigate after a short delay to ensure cookies are set
           // setTimeout(() => {
           //   router.push("/vendor/dashboard")

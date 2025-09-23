@@ -21,11 +21,13 @@ const SignUp = () => {
       document.body.classList.remove('authentication-bg');
     };
   }, []);
+
   const messageSchema = yup.object({
     name: yup.string().required('Please enter Name'),
     email: yup.string().email().required('Please enter Email'),
     password: yup.string().required('Please enter password')
   });
+  
   const {
     handleSubmit,
     control

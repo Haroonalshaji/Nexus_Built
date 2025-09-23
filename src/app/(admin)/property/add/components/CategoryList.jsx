@@ -202,19 +202,8 @@ const ConstructionCategoriesAdmin = () => {
     }
   }
 
-  const searchForUser = () => {
-    var user = sessionStorage.getItem('userSession');
-    console.log(user);
-    user = JSON.parse(user);
-    if (user == "" || user == null || user == undefined) {
-      push(queryParams['redirectTo'] ?? '/auth/sign-in');
-    }
-    console.log(user);
-    return user;
-  }
 
   useEffect(() => {
-    searchForUser();
   }, []);
 
   const totalSubcategories = categories.reduce((total, cat) => total + cat.subcategories.length, 0)

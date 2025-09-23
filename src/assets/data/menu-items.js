@@ -129,6 +129,24 @@ export const MENU_ITEMS = [{
   icon: 'ri:chat-quote-line',
   url: '/reviews'
 },
+{
+  key: 'listOfVendors',
+  label: 'Vendors',
+  icon: "ri:group-line",
+  url: '/vendorLists'
+},
+{
+  key: 'listOfCustomers',
+  label: 'Customers',
+  icon: "ri:team-line",
+  url: '/customerLists'
+},
+{
+  key: 'masterContactLeads',
+  label: 'Contact Us',
+  icon: "ri:mail-line",
+  url: '/contactLeads'
+},
 // {
 //   key: 'messages',
 //   label: 'Messages',

@@ -8,6 +8,7 @@ import PageTitle from '@/components/PageTitle';
 import TextFormInput from '@/components/from/TextFormInput';
 import SelectFormInput from '@/components/from/SelectFormInput';
 import TextAreaFormInput from '@/components/from/TextAreaFormInput';
+import { getVendorSubscriptionDetails, updateVendorSubscriptionDetails } from '@/utils/apiCalls/commonApi';
 
 // Currency options for the select dropdown
 const currencyOptions = [
@@ -39,9 +40,9 @@ export default function Subscriptions() {
       subscriptionGuid: '',
       subscriptionName: '',
       description: '',
-      monthlyPrice: 0,
-      quarterlyPrice: 0,
-      annualPrice: 0,
+      monthlyPrice: '',
+      quarterlyPrice: '',
+      annualPrice: '',
       currencyType: 'AED'
     }
   });
@@ -50,24 +51,24 @@ export default function Subscriptions() {
   const fetchSubscriptionData = async () => {
     setIsLoading(true);
     try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/subscriptions');
-      // const data = await response.json();
-      
-      // Mock data for now
-      const mockData = {
-        subscriptionGuid: 'sub-123456789',
-        subscriptionName: 'Premium Plan',
-        description: 'Access to all premium features with priority support',
-        monthlyPrice: 99.99,
-        quarterlyPrice: 279.99,
-        annualPrice: 999.99,
-        currencyType: 'AED'
+      const response = await getVendorSubscriptionDetails();
+      // Many endpoints in this codebase wrap data as { result: [...] } or { result: {...} }
+      const raw = response?.data?.result ?? response?.data;
+      const dto = Array.isArray(raw) ? raw[0] : raw;
+
+      // Map API fields -> form fields (adjust keys here if backend differs)
+      const mapped = {
+        subscriptionGuid: dto?.subscriptionGuid ?? '',
+        subscriptionName: dto?.subscriptionName ?? '',
+        description: dto?.description ?? '',
+        monthlyPrice: dto?.monthlyPrice ?? '',
+        quarterlyPrice: dto?.quarterlyPrice ?? '',
+        annualPrice: dto?.annualPrice ?? '',
+        currencyType: dto?.currencyType ?? 'AED'
       };
-      
-      setSubscriptionData(mockData);
-      reset(mockData);
-      setAlertMessage({ show: true, type: 'success', message: 'Subscription data loaded successfully!' });
+
+      setSubscriptionData(mapped);
+      reset(mapped);
     } catch (error) {
       setAlertMessage({ show: true, type: 'danger', message: 'Failed to load subscription data' });
     } finally {
@@ -79,17 +80,16 @@ export default function Subscriptions() {
   const updateSubscriptionData = async (data) => {
     setIsLoading(true);
     try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/subscriptions', {
-      //   method: 'PUT',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data)
-      // });
-      
-      // Mock success response
-      console.log('Updating subscription data:', data);
-      
-      setSubscriptionData(data);
+      const payload = {
+        ...data,
+        monthlyPrice: data?.monthlyPrice !== '' ? Number(data.monthlyPrice) : null,
+        quarterlyPrice: data?.quarterlyPrice !== '' ? Number(data.quarterlyPrice) : null,
+        annualPrice: data?.annualPrice !== '' ? Number(data.annualPrice) : null
+      };
+
+      await updateVendorSubscriptionDetails(payload);
+
+      setSubscriptionData(payload);
       setIsEditing(false);
       setAlertMessage({ show: true, type: 'success', message: 'Subscription updated successfully!' });
     } catch (error) {
@@ -125,15 +125,15 @@ export default function Subscriptions() {
       <PageTitle title="Subscriptions" subName="Management" />
       <Row>
         <Col xl={12}>
-          <ComponentContainerCard 
-            title="Subscription Details" 
+          <ComponentContainerCard
+            title="Subscription Details"
             description="Manage subscription plans and pricing information"
             className="mb-4"
           >
             {alertMessage.show && (
-              <Alert 
-                variant={alertMessage.type} 
-                dismissible 
+              <Alert
+                variant={alertMessage.type}
+                dismissible
                 onClose={() => setAlertMessage({ show: false, type: 'success', message: '' })}
                 className="mb-4"
               >
@@ -200,7 +200,7 @@ export default function Subscriptions() {
                       placeholder="0.00"
                       disabled={!isEditing}
                       containerClassName="mb-3"
-                      rules={{ 
+                      rules={{
                         required: 'Monthly price is required',
                         min: { value: 0, message: 'Price must be greater than or equal to 0' }
                       }}
@@ -217,7 +217,7 @@ export default function Subscriptions() {
                       placeholder="0.00"
                       disabled={!isEditing}
                       containerClassName="mb-3"
-                      rules={{ 
+                      rules={{
                         required: 'Quarterly price is required',
                         min: { value: 0, message: 'Price must be greater than or equal to 0' }
                       }}
@@ -234,7 +234,7 @@ export default function Subscriptions() {
                       placeholder="0.00"
                       disabled={!isEditing}
                       containerClassName="mb-3"
-                      rules={{ 
+                      rules={{
                         required: 'Annual price is required',
                         min: { value: 0, message: 'Price must be greater than or equal to 0' }
                       }}
@@ -255,7 +255,7 @@ export default function Subscriptions() {
                       containerClassName="mb-3"
                       defaultValue="AED"
                       placeholder="AED"
-                      // rules={{ required: 'Currency type is required' }}
+                    // rules={{ required: 'Currency type is required' }}
                     />
                   </Col>
                 </Row>
@@ -265,15 +265,15 @@ export default function Subscriptions() {
                     <div className="d-flex gap-2 flex-wrap">
                       {!isEditing ? (
                         <>
-                          <Button 
-                            variant="primary" 
+                          <Button
+                            variant="primary"
                             onClick={handleEdit}
                             disabled={isLoading}
                           >
                             Edit Subscription
                           </Button>
-                          <Button 
-                            variant="outline-secondary" 
+                          <Button
+                            variant="outline-secondary"
                             onClick={handleRefresh}
                             disabled={isLoading}
                           >
@@ -282,8 +282,8 @@ export default function Subscriptions() {
                         </>
                       ) : (
                         <>
-                          <Button 
-                            variant="success" 
+                          <Button
+                            variant="success"
                             type="submit"
                             disabled={isLoading || !isDirty}
                           >
@@ -296,8 +296,8 @@ export default function Subscriptions() {
                               'Save Changes'
                             )}
                           </Button>
-                          <Button 
-                            variant="outline-secondary" 
+                          <Button
+                            variant="outline-secondary"
                             onClick={handleCancel}
                             disabled={isLoading}
                           >

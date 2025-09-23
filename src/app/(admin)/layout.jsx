@@ -8,17 +8,15 @@ const VerticalNavigationBar = dynamic(() => import('@/components/layout/Vertical
 const AdminLayout = ({
   children
 }) => {
-  return <AuthProtectionWrapper>
-      <div className="wrapper">
-        <Suspense>
-          <TopNavigationBar />
-        </Suspense>
-        <VerticalNavigationBar />
-        <div className="page-content">
-          <Container fluid>{children}</Container>
-          <Footer />
-        </div>
-      </div>
-    </AuthProtectionWrapper>;
+  return <div className="wrapper">
+    <Suspense>
+      <TopNavigationBar />
+    </Suspense>
+    <VerticalNavigationBar />
+    <div className="page-content">
+      <Container fluid>{children}</Container>
+      <Footer />
+    </div>
+  </div>
 };
 export default AdminLayout;
