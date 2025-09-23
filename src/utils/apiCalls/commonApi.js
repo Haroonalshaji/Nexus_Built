@@ -22,4 +22,11 @@ export const unBlockCustomer = (customerGuid) => api.put(`/customers/unblock?cus
 
 // subscription get_n_put
 export const getVendorSubscriptionDetails = () => api.get("/subscriptions/subscription");
-export const updateVendorSubscriptionDetails = (payload) => api.put("/subscriptions/subscription", payload)
+export const updateVendorSubscriptionDetails = (payload) => api.put("/subscriptions/subscription", payload);
+
+// categoryMaster
+export const getListCategories = () => api.get("/masters/category");
+export const updateCategoryName = (payload) => api.put("/masters/category",payload);
+export const addNewCategory = (payload) => api.post("/masters/category",payload);
+export const deleteCategory = (categoryId) => api.delete(`/masters/category/${categoryId}`);
+export const specificCategoryDetail = (categoryId) => api.get(`/masters/category/${categoryId}`);
