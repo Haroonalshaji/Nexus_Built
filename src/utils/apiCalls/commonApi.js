@@ -26,7 +26,15 @@ export const updateVendorSubscriptionDetails = (payload) => api.put("/subscripti
 
 // categoryMaster
 export const getListCategories = () => api.get("/masters/category");
-export const updateCategoryName = (payload) => api.put("/masters/category",payload);
-export const addNewCategory = (payload) => api.post("/masters/category",payload);
+export const updateCategoryName = (payload) => api.put("/masters/category", payload);
+export const addNewCategory = (payload) => api.post("/masters/category", payload);
 export const deleteCategory = (categoryId) => api.delete(`/masters/category/${categoryId}`);
 export const specificCategoryDetail = (categoryId) => api.get(`/masters/category/${categoryId}`);
+
+// AdminOrders
+export const getAllAdminOrders = () => api.get("/orders/all");
+
+//AdminEnquiries_made_by_the_customer
+export const getAllEnquiriesMadeCustomer = (payload) => api.post("/admin/enquiry/filters", payload);
+export const getEnquiryAttachments = (enquiryGuid) => api.get(`/admin/enquiry/attachments?enquiryGuid=${enquiryGuid}`);
+export const getIndividualEnquiryDet = (enquiryGuid) => api.get(`/admin/enquiry?enquiryGuid=${enquiryGuid}`);

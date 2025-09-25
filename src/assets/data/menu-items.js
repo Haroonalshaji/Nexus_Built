@@ -130,6 +130,12 @@ export const MENU_ITEMS = [{
   url: '/reviews'
 },
 {
+  key: 'customerEnquiries',
+  label: 'Customer Enquiries',
+  icon: 'ri:question-answer-line',
+  url: '/customerEnquiries'
+},
+{
   key: 'listOfVendors',
   label: 'Vendors',
   icon: "ri:group-line",

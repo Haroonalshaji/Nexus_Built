@@ -77,7 +77,7 @@ const Statistics = () => {
         {
           icon: 'solar:money-bag-broken',
           title: 'Revenue',
-          amount: `$${data?.totalRevenue}`,
+          amount: `AED ${data?.totalRevenue}`,
           change: 8.76,
           url: '',
         },
