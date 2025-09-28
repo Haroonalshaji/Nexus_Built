@@ -63,8 +63,10 @@ const VendorClient = () => {
             if (actionType === "approve") {
                 const approvedResponse = await approveVendorApplication(selectedId);
                 console.log(`Approved vendor ${approvedResponse}`);
+                setShowModal(false);
             } else if (actionType === "reject") {
                 const rejectedResponse = await rejectVendorApplication(selectedId);
+                setShowModal(false);
                 console.log(`Rejected vendor ${rejectedResponse}`);
             }
 

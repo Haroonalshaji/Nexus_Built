@@ -127,7 +127,22 @@ export const MENU_ITEMS = [{
   key: 'reviews',
   label: 'Enquiries',
   icon: 'ri:chat-quote-line',
-  url: '/reviews'
+  url: '/reviews',
+  children: [{
+    key: 'enquiry',
+    label: 'Enquiry List',
+    // url: '/dashboards/analytics',
+    url: '/reviews',
+    parentKey: 'reviews'
+  },
+  // {
+  //   key: 'individual-enquiry',
+  //   label: 'Enquiry Details',
+  //   // url: '/dashboards/analytics',
+  //   url: '/reviews/individual-enquiry',
+  //   parentKey: 'reviews'
+  // },
+  ]
 },
 {
   key: 'customerEnquiries',

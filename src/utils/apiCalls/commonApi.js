@@ -38,3 +38,8 @@ export const getAllAdminOrders = () => api.get("/orders/all");
 export const getAllEnquiriesMadeCustomer = (payload) => api.post("/admin/enquiry/filters", payload);
 export const getEnquiryAttachments = (enquiryGuid) => api.get(`/admin/enquiry/attachments?enquiryGuid=${enquiryGuid}`);
 export const getIndividualEnquiryDet = (enquiryGuid) => api.get(`/admin/enquiry?enquiryGuid=${enquiryGuid}`);
+
+//AdminEnquiries
+export const getAllEnquiries = (payload) => api.post("/admin/enquiry/filters", payload);
+export const getEachEnquiries = (payload) => api.get(`/admin/enquiry?enquiryGuid=${payload}`);
+export const getVendorEnqAttachments = (enquiryGuid) => api.get(`/admin/enquiry/attachments?enquiryGuid=${enquiryGuid}`);
