@@ -91,11 +91,11 @@ const AdminUserPage = () => {
 
     return (
         <div className="container">
-            <PageTitle title={adminGuid ? "Admin User Details" : "Add Admin User"} subName="Admin Management" />
+            {/* <PageTitle title={adminGuid ? "Admin User Details" : "Add Admin User"} subName="Admin Management" /> */}
 
             <Card className="shadow-sm">
-                <CardHeader>
-                    <CardTitle>{adminGuid ? "View Admin User" : "Add Admin User"}</CardTitle>
+                <CardHeader className="px-0">
+                    {/* <CardTitle>{adminGuid ? "View Admin User" : "Add Admin User"}</CardTitle> */}
 
                     <CardHeader>
                         <CardTitle>{adminGuid ? "View Admin User" : "Add Admin User"}</CardTitle>
@@ -121,7 +121,7 @@ const AdminUserPage = () => {
                                 <Form.Group>
                                     <Form.Label>Password *</Form.Label>
                                     <Form.Control
-                                        type="password"
+                                        type="text"
                                         value={formData.password}
                                         onChange={(e) => handleChange("password", e.target.value)}
                                         readOnly={adminGuid && !isEditing}

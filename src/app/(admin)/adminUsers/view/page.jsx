@@ -77,7 +77,7 @@ const AdminUsersPage = () => {
 
     return (
         <div className="container">
-            <PageTitle title="Admin Users" subName="User Management" />
+            <PageTitle title="View Users" subName="User Management" />
 
             <Card className="shadow-sm">
                 <CardHeader>
@@ -96,7 +96,7 @@ const AdminUsersPage = () => {
                                     <th>Status</th>
                                     <th>Created On</th>
                                     <th className="text-center" colSpan={2}>Actions</th>
-                                    <th className="text-center">View</th>
+                                    <th className="text-center">Edit</th>
                                     <th className="text-center text-red">Delete</th>
                                 </tr>
                             </thead>
@@ -140,7 +140,7 @@ const AdminUsersPage = () => {
                                             <td>
                                                 <Link href={`/adminUsers/create?adminGuid=${user.userGuid}`}>
                                                     <Button>
-                                                        View
+                                                        Edit
                                                     </Button>
                                                 </Link>
                                             </td>
