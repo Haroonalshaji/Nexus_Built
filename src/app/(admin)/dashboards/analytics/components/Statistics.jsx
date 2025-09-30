@@ -13,7 +13,7 @@ const StatCard = ({ amount, change, icon, title, variant, url }) => {
     <Card>
       <CardBody>
         <Row className="align-items-center justify-content-between">
-          <Col xs={6}>
+          <Col xs={12}>
             <div className="avatar-md bg-light bg-opacity-50 rounded flex-centered">
               <IconifyIcon width={32} height={32} icon={icon} className="text-primary" />
             </div>
@@ -25,7 +25,7 @@ const StatCard = ({ amount, change, icon, title, variant, url }) => {
 
             </h3>
           </Col>
-          <Col xs={6}>
+          {/* <Col xs={6}>
             <ReactApexChart
               options={chartOptions}
               series={chartOptions.series}
@@ -33,7 +33,7 @@ const StatCard = ({ amount, change, icon, title, variant, url }) => {
               type="bar"
               className="apex-charts"
             />
-          </Col>
+          </Col> */}
         </Row>
       </CardBody>
     </Card>

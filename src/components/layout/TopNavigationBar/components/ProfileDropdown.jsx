@@ -39,16 +39,16 @@ const ProfileDropdown = () => {
     </DropdownToggle>
     <DropdownMenu className="dropdown-menu-end">
       <DropdownHeader as={'h6'} className="dropdown-header">
-        Welcome Gaston!
+        Welcome Admin!
       </DropdownHeader>
-      <DropdownItem as={Link} href="/profile">
+      {/* <DropdownItem as={Link} href="/profile">
         <IconifyIcon icon="solar:calendar-broken" className="align-middle me-2 fs-18" />
         <span className="align-middle">My Schedules</span>
       </DropdownItem>
       <DropdownItem as={Link} href="/pages/pricing">
         <IconifyIcon icon="solar:wallet-broken" className="align-middle me-2 fs-18" />
         <span className="align-middle">Pricing</span>
-      </DropdownItem>
+      </DropdownItem> */}
       <DropdownItem as={Link} href="/support/faqs">
         <IconifyIcon icon="solar:help-broken" className="align-middle me-2 fs-18" />
         <span className="align-middle">Help</span>

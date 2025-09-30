@@ -128,13 +128,13 @@ export const MENU_ITEMS = [{
   label: 'Enquiries',
   icon: 'ri:chat-quote-line',
   url: '/reviews',
-  children: [{
-    key: 'enquiry',
-    label: 'Enquiry List',
-    // url: '/dashboards/analytics',
-    url: '/reviews',
-    parentKey: 'reviews'
-  },
+  // children: [{
+  //   key: 'enquiry',
+  //   label: 'Enquiry List',
+  //   // url: '/dashboards/analytics',
+  //   url: '/reviews',
+  //   parentKey: 'reviews'
+  // },
   // {
   //   key: 'individual-enquiry',
   //   label: 'Enquiry Details',
@@ -142,14 +142,14 @@ export const MENU_ITEMS = [{
   //   url: '/reviews/individual-enquiry',
   //   parentKey: 'reviews'
   // },
-  ]
+  // ]
 },
-{
-  key: 'customerEnquiries',
-  label: 'Customer Enquiries',
-  icon: 'ri:question-answer-line',
-  url: '/customerEnquiries'
-},
+// {
+//   key: 'customerEnquiries',
+//   label: 'Customer Enquiries',
+//   icon: 'ri:question-answer-line',
+//   url: '/customerEnquiries'
+// },
 {
   key: 'listOfVendors',
   label: 'Vendors',
@@ -200,6 +200,29 @@ export const MENU_ITEMS = [{
     //   url: '/post/create',
     //   parentKey: 'post'
     // }
+  ]
+},
+{
+  key: 'adminUsers',
+  label: 'Admin Users',
+  icon: 'ri:user-3-line',
+  url: '/adminUsers',
+  children: [
+    {
+      key: 'view',
+      label: 'View Admins',
+      // url: '/dashboards/analytics',
+      url: '/adminUsers/view',
+      parentKey: 'adminUsers'
+    },
+    {
+      key: 'create',
+      label: 'Create User',
+      // url: '/dashboards/analytics',
+      url: '/adminUsers/create',
+      parentKey: 'adminUsers'
+    },
+
   ]
 },
 

@@ -48,21 +48,21 @@ const IndividualEnquiryPage = () => {
     useEffect(() => {
         fetchEnquiry();
 
-        // Redirect after 5 seconds if still loading or no data
-        const timer = setTimeout(() => {
-            if (!enquiryGuid || !enquiry?.enquiryGuid) {
-                router.push("/reviews");
-            }
-        }, 5000);
+        // // Redirect after 5 seconds if still loading or no data
+        // const timer = setTimeout(() => {
+        //     if (!enquiryGuid || !enquiry?.enquiryGuid) {
+        //         router.push("/reviews");
+        //     }
+        // }, 5000);
 
-        return () => clearTimeout(timer);
+        // return () => clearTimeout(timer);
     }, [enquiryGuid]);
 
     if (isLoading) {
         return (
             <div className="min-h-screen flex flex-col justify-center items-center">
                 <p className="text-gray-500 text-lg mb-3">Loading enquiry...</p>
-                <Button onClick={() => router.push("/reviews")}>Go to Reviews</Button>
+                <Button onClick={() => router.push("/reviews")}>Go to Enquiries</Button>
             </div>
         );
     }

@@ -43,3 +43,5 @@ export const getIndividualEnquiryDet = (enquiryGuid) => api.get(`/admin/enquiry?
 export const getAllEnquiries = (payload) => api.post("/admin/enquiry/filters", payload);
 export const getEachEnquiries = (payload) => api.get(`/admin/enquiry?enquiryGuid=${payload}`);
 export const getVendorEnqAttachments = (enquiryGuid) => api.get(`/admin/enquiry/attachments?enquiryGuid=${enquiryGuid}`);
+
+//adminquote

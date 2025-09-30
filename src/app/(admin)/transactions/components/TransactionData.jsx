@@ -179,7 +179,7 @@ const TransactionData = () => {
                               {item.paymentStatus}
                             </span>
                           </td>
-                          <td>${item.priceAtPurchase}</td>
+                          <td>AED {item.priceAtPurchase}</td>
                           <td>{new Date(item.addedOn).toLocaleString()}</td>
                           <td>{new Date(item.updatedOn).toLocaleString()}</td>
                         </tr>
