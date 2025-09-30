@@ -132,10 +132,10 @@ const TransactionData = () => {
                       <th>Order No</th>
                       <th>Name</th>
                       <th>Email</th>
-                      <th>Transaction Id</th>
                       <th>Contact</th>
                       <th>Payment Mode</th>
                       <th>Order Status</th>
+                      <th>Transaction Id</th>
                       <th>Payment Status</th>
                       <th>Price</th>
                       <th>Added On</th>
@@ -162,7 +162,6 @@ const TransactionData = () => {
                           </td>
                           <td>{item.name} {item.lastName}</td>
                           <td>{item.email}</td>
-                          <td>{item.paymentId || 'N/A'}</td>
                           <td>{item.contact || '-'}</td>
                           <td>{item.paymentMode}</td>
                           <td>
@@ -172,6 +171,7 @@ const TransactionData = () => {
                               {item.orderStatus}
                             </span>
                           </td>
+                          <td>{item.paymentId || 'N/A'}</td>
                           <td>
                             <span
                               className={`badge bg-${statusVariant(item.paymentStatus)}-subtle text-${statusVariant(item.paymentStatus)} py-1 px-2 fs-12`}

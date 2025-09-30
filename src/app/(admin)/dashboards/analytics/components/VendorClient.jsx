@@ -188,7 +188,7 @@ const VendorClient = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {currentData.map((item, idx) => (
+                                            {currentData.sort((a, b) => new Date(b.registeredOn) - new Date(a.registeredOn)).map((item, idx) => (
                                                 <tr key={idx}>
                                                     <td>
                                                         <div className="form-check">

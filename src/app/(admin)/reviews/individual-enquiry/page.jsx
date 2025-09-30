@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button, Card, CardBody, CardHeader, CardTitle, Col, Row, Badge, Image } from "react-bootstrap";
 import PageTitle from "@/components/PageTitle";
-import { getEachEnquiries, getVendorEnqAttachments } from "@/utils/apiCalls/commonApi";
+import { getEachEnquiries, getVendorEnqAttachments, getVendorQuoteAdmin } from "@/utils/apiCalls/commonApi";
 
 const IndividualEnquiryPage = () => {
     const searchParams = useSearchParams();
@@ -15,6 +15,8 @@ const IndividualEnquiryPage = () => {
     const [attachments, setAttachments] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [showRedirect, setShowRedirect] = useState(false);
+    const [quotes, setQuotes] = useState([]);
+    const sortedQuotes = quotes.sort((a, b) => new Date(b.updatedOn) - new Date(a.updatedOn));
 
     const priorityConfig = {
         High: "bg-danger text-white",
@@ -45,9 +47,22 @@ const IndividualEnquiryPage = () => {
         }
     };
 
+    const vendorQuotes = async () => {
+        if (!enquiryGuid) return;
+        setIsLoading(true);
+        try {
+            const res = await getVendorQuoteAdmin(enquiryGuid);
+            if (res.data.isSuccess && res.data.result) {
+                setQuotes(res.data.result || []);
+            }
+        } catch (error) {
+            console.error("Error fetching quotes:", error);
+        }
+    }
+
     useEffect(() => {
         fetchEnquiry();
-
+        vendorQuotes();
         // // Redirect after 5 seconds if still loading or no data
         // const timer = setTimeout(() => {
         //     if (!enquiryGuid || !enquiry?.enquiryGuid) {
@@ -71,7 +86,7 @@ const IndividualEnquiryPage = () => {
         return (
             <div className="min-h-screen flex flex-col justify-center items-center">
                 <p className="text-red-500 text-lg mb-3">Enquiry not found or cannot be loaded.</p>
-                <Button onClick={() => router.push("/reviews")}>Go to Reviews</Button>
+                <Button onClick={() => router.push("/reviews")}>Go to Enquiries</Button>
             </div>
         );
     }
@@ -127,9 +142,90 @@ const IndividualEnquiryPage = () => {
                             </CardBody>
                         </Card>
                     )}
+
+                    <div className="card shadow-sm rounded" style={{borderRadius:"10px"}}>
+                        <div className="card-header bg-light">
+                            <h5 className="mb-0">Vendor Quotes</h5>
+                        </div>
+
+                        <div className="list-group list-group-flush">
+                            {sortedQuotes.map((quote,idx) => {
+                                const isUpdated =
+                                    new Date(quote.addedOn).getTime() !==
+                                    new Date(quote.updatedOn).getTime();
+
+                                return (
+                                    <div
+                                        key={quote.quoteGuid}
+                                        className="list-group-item mb-1 d-flex flex-column flex-md-row justify-content-between align-items-start"
+                                    >
+                                        {/* Left Section: Vendor + Details */}
+                                        <div className="flex-grow-1 pe-3">
+                                            <div className="d-flex gap-1"><small>{idx+1}. </small><h5 className="fw-bold mb-1">{quote.businessName}</h5></div>
+                                            <small className="text-muted d-block mb-2">
+                                                {quote.firstName} {quote.lastName} | {quote.emailAddress} |{" "}
+                                                {quote.phoneNo}
+                                            </small>
+
+                                            <div className="small text-muted mb-1">
+                                                <strong>Description:</strong> {quote.description}
+                                            </div>
+                                            <div className="small text-muted mb-1">
+                                                <strong>Materials:</strong> {quote.matAndEqup}
+                                            </div>
+                                            <div className="small text-muted mb-1">
+                                                <strong>Warranty:</strong> {quote.warrantyInfo}
+                                            </div>
+                                            {quote.notes && (
+                                                <div className="small text-muted mb-1">
+                                                    <strong>Notes:</strong> {quote.notes}
+                                                </div>
+                                            )}
+
+                                            {quote.attachment && (
+                                                <div className="mt-2">
+                                                    <strong>Attachment:</strong>{" "}
+                                                    <a
+                                                        href={quote.attachment}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        download
+                                                        className="text-primary"
+                                                    >
+                                                        {quote.attachmentType === "Image" ? "View Image" : "Download"}
+                                                    </a>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Right Section: Price + Status */}
+                                        <div className="text-md-end mt-3 mt-md-0">
+                                            <h5 className="fw-bold text-danger">
+                                                AED {quote.quotePrice.toLocaleString()}
+                                            </h5>
+                                            <div className="text-muted small mb-2">
+                                                Timeline: {quote.timeLine}
+                                            </div>
+
+                                            {isUpdated ? (
+                                                <span className="badge bg-warning text-dark">
+                                                    Updated: {new Date(quote.updatedOn).toLocaleDateString()}
+                                                </span>
+                                            ) : (
+                                                <span className="badge bg-success">
+                                                    Submitted: {new Date(quote.addedOn).toLocaleDateString()}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
                 </Col>
 
-                <Col lg={4} className="space-y-3">
+                <Col lg={4} className="space-y-3 ">
                     <Card className="shadow-sm">
                         <CardHeader>
                             <CardTitle>Customer Information</CardTitle>
@@ -154,8 +250,8 @@ const IndividualEnquiryPage = () => {
                         </CardBody>
                     </Card>
 
-                    <Button className="mt-3 w-100" onClick={() => router.push("/reviews")}>
-                        Go to Reviews
+                    <Button className="w-100" onClick={() => router.push("/reviews")}>
+                        Go to Enquiries
                     </Button>
                 </Col>
             </Row>

@@ -34,7 +34,13 @@ const ProfileDropdown = () => {
   return <Dropdown className="topbar-item" drop="down">
     <DropdownToggle as={'a'} type="button" className="topbar-button content-none" id="page-header-user-dropdown " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span className="d-flex align-items-center">
-        <Image className="rounded-circle" width={32} src={avatar1} alt="avatar-3" />
+        {/* <Image className="rounded-circle" width={32} src={avatar1} alt="avatar-3" /> */}
+        <IconifyIcon
+          icon="mdi:shield-account" // or "mdi:account-circle" / "material-symbols:admin-panel-settings"
+          className="text-silver"
+          width={25}
+          height={25}
+        />
       </span>
     </DropdownToggle>
     <DropdownMenu className="dropdown-menu-end">

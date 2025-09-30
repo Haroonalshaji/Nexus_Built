@@ -45,3 +45,4 @@ export const getEachEnquiries = (payload) => api.get(`/admin/enquiry?enquiryGuid
 export const getVendorEnqAttachments = (enquiryGuid) => api.get(`/admin/enquiry/attachments?enquiryGuid=${enquiryGuid}`);
 
 //adminquote
+export const getVendorQuoteAdmin = (enquiryGuid) => api.get(`/admin/quote?enquiryGuid=${enquiryGuid}`);

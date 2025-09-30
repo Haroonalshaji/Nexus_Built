@@ -177,13 +177,13 @@ export default function VendorTable() {
                                     <table className="table align-middle text-nowrap table-hover table-centered mb-0">
                                         <thead className="bg-light-subtle">
                                             <tr>
-                                                <th style={{ width: 20 }}>
+                                                {/* <th style={{ width: 20 }}>
                                                     <div className="form-check">
                                                         <input type="checkbox" className="form-check-input" id="customCheck1" />
                                                         <label className="form-check-label" htmlFor="customCheck1" />
                                                     </div>
-                                                </th>
-                                                <th>Vendor ID</th>
+                                                </th> */}
+                                                <th>#</th>
                                                 <th>Vendor Name</th>
                                                 <th>Vendor Email</th>
                                                 <th>Business Name</th>
@@ -197,16 +197,14 @@ export default function VendorTable() {
                                         <tbody>
                                             {currentData.map((item, idx) => (
                                                 <tr key={idx}>
-                                                    <td>
+                                                    {/* <td>
                                                         <div className="form-check">
                                                             <input type="checkbox" className="form-check-input" id={`customCheck${idx}`} />
                                                             <label className="form-check-label" htmlFor={`customCheck${idx}`}>&nbsp;</label>
                                                         </div>
-                                                    </td>
+                                                    </td> */}
                                                     <td>
-                                                        <Link href="#" className="text-dark fw-medium">
-                                                            #{item.vendorGuid ? `${item.vendorGuid.substring(0, 6)}...${item.vendorGuid.slice(-4)}` : ""}
-                                                        </Link>
+                                                       {idx+1}
                                                     </td>
                                                     <td>{item.firstName} {item.lastName}</td>
                                                     <td>{item.emailAddress}</td>
@@ -220,9 +218,8 @@ export default function VendorTable() {
                                                     <td className={item.vendorStatus === "Blocked" ? "text-danger" : "text-success"}>
                                                         {item.vendorStatus}
                                                     </td>
-
                                                     <td>
-                                                        <span className={`badge bg-${item.businessStatus === "PendingVerification" ? "warning" : "success"}-subtle text-${item.businessStatus === "PendingVerification" ? "warning" : "success"} py-1 px-2 fs-12`}>
+                                                        <span className={`badge bg-${item.businessStatus === "Rejected" ? "warning" : "success"}-subtle text-${item.businessStatus === "Rejected" ? "warning" : "success"} py-1 px-2 fs-12`}>
                                                             {item.businessStatus}
                                                         </span>
                                                     </td>
