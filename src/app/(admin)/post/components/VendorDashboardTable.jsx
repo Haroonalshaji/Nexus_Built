@@ -1,193 +1,164 @@
 "use client";
-import React, { useState } from "react";
-import { Card, CardBody, CardTitle, Button } from "react-bootstrap";
-import * as XLSX from "xlsx";
-import jsPDF from "jspdf";
+import { useDebugValue, useEffect, useState } from "react";
+import ExportableTable from "@/components/ExportableTable"; // 👈 use the component you shared
+import { getAllAdminOrders, getAllEnquiries } from "@/utils/apiCalls/commonApi";
 
-const sampleVendors = [
+// --- Sample Data ---
+const ordersData1 = [
   {
-    id: 1,
-    name: "Vendor A",
-    work: "Plumbing",
-    quotation: "$1,200",
-    details: "Completed installation of pipes on 2024-03-01",
-    status: "Completed"
+    orderGuid: "caeba4e3-a3c1-4be9-9bc7-efbbdd70754d",
+    orderNo: "NXBOID0078",
+    vendorGuid: "6a2a4fec-e935-4a15-b5bf-014fe2dfce67",
+    subscriptionGuid: "09193439-CA8A-499C-9DF6-50263EB534F6",
+    name: "Vishnu",
+    lastName: "test",
+    email: "vishnu@brandstory.in",
+    contact: "",
+    paymentMode: "Payment Gateway",
+    orderStatus: "Active",
+    addedOn: "2025-09-22T11:05:14.92",
+    paymentStatus: "Initiated",
+    paymentId: "",
+    priceAtPurchase: 49,
+    updatedOn: "2025-09-22T11:05:14.92",
   },
+];
+
+const enquiriesData1 = [
   {
-    id: 2,
-    name: "Vendor B",
-    work: "Electrical",
-    quotation: "$2,500",
-    details: "Wiring and lighting setup, ongoing",
-    status: "Pending"
+    rowNumber: 1,
+    totalCount: 4,
+    enquiryGuid: "3518c47b-9a5a-4b22-9ada-b0abf55ba806",
+    customerGuid: "b1271b7f-799d-4895-9faf-67f714f110fc",
+    customerName: "Haroon Shaji",
+    emailAddress: "haroonalshaji@gmail.com",
+    phoneNumber: "9207619827",
+    priorityLevel: "medium",
+    serviceRequired: "Stone (Supply & Installation)",
+    description: "categoryNamecategoryNamecategoryNamecategoryNamecategoryName",
+    totalAmount: 0,
+    addedOn: "2025-09-23T22:11:02.45",
+    status: "Open",
+    statusOn: "2025-09-23T22:11:02.45",
+    statusNotes: "",
+    attachmentCount: 2,
+    totalQuotes: 2,
   },
-  {
-    id: 3,
-    name: "Vendor C",
-    work: "Painting",
-    quotation: "$900",
-    details: "Interior painting, completed 2024-02-15",
-    status: "Completed"
-  },
-  {
-    id: 4,
-    name: "Vendor D",
-    work: "Flooring",
-    quotation: "$3,000",
-    details: "Tile installation, scheduled for 2024-04-10",
-    status: "Cancelled"
-  },
-  {
-    id: 5,
-    name: "Vendor E",
-    work: "Roofing",
-    quotation: "$4,500",
-    details: "Roof repair, completed 2024-01-20",
-    status: "Completed"
-  },
-  {
-    id: 6,
-    name: "Vendor F",
-    work: "Carpentry",
-    quotation: "$2,000",
-    details: "Cabinet installation, ongoing",
-    status: "Pending"
+];
+
+// --- Column Configs ---
+const orderColumns = [
+  { key: "orderNo", label: "Order No" },
+  { key: "name", label: "Name" },
+  { key: "email", label: "Email" },
+  { key: "paymentMode", label: "Payment Mode" },
+  { key: "paymentStatus", label: "Payment Status" },
+  { key: "orderStatus", label: "Order Status" },
+  { key: "paymentId", label: "Transaction ID" },
+  { key: "priceAtPurchase", label: "Price" },
+  { key: "addedOn", label: "Added On" },
+];
+
+const enquiryColumns = [
+  { key: "rowNumber", label: "#" },
+  { key: "customerName", label: "Customer Name" },
+  { key: "emailAddress", label: "Email" },
+  { key: "phoneNumber", label: "Phone" },
+  { key: "priorityLevel", label: "Priority" },
+  { key: "serviceRequired", label: "Service Required" },
+  { key: "status", label: "Status" },
+  { key: "addedOn", label: "Added On" },
+];
+
+// --- Page Component ---
+export default function TablesPage() {
+  const [ordersData, setOrdersData] = useState([])
+  const [enquiriesData, setEnquiriesData] = useState([])
+
+  const [orderFilters, setOrderFilters] = useState({
+    search: "",
+    orderStatus: "",    // 👈 separate for order status
+    paymentStatus: "",  // 👈 separate for payment status
+    fromDate: "",
+    toDate: "",
+    pageNo: 0,
+    pageSize: 20
+  });
+
+
+  const [enquiryFilters, setEnquiryFilters] = useState({
+    search: "",
+    status: "", // 👈 enquiry status
+    priority: "", // 👈 enquiry priority
+    fromDate: "",
+    toDate: "",
+    pageNo: 0,
+    pageSize: 20
+  });
+
+
+  const getAllTransactionDetails = async () => {
+    try {
+      const result = await getAllAdminOrders();
+      setOrdersData(result?.data?.result || []);
+    } catch (error) {
+      console.error(error);
+    } finally {
+    }
+  };
+
+  const getEnquiryDetails = async () => {
+    let payload = {
+      pageSize: enquiryFilters.pageSize,
+      pageNo: enquiryFilters.pageNo,
+      fromDate: enquiryFilters.fromDate,
+      toDat: enquiryFilters.toDate,
+      sParam: enquiryFilters.search,
+      status: enquiryFilters.status,
+      priority: enquiryFilters.priority
+    }
+    try {
+      const result = await getAllEnquiries(payload);
+      setEnquiriesData(result?.data?.result || [])
+    } catch (error) {
+      console.error(error)
+    }
   }
-];
 
-const PAGE_SIZE = 5;
-const columns = [
-  { key: "id", label: "Vendor ID" },
-  { key: "name", label: "Vendor Name" },
-  { key: "work", label: "Work" },
-  { key: "quotation", label: "Quotation" },
-  { key: "details", label: "Details" },
-  { key: "status", label: "Status" }
-];
-
-const statusBadge = status => {
-  if (status === "Completed") return <span className="badge bg-success-subtle text-success py-1 px-2 fs-12">Completed</span>;
-  if (status === "Pending") return <span className="badge bg-warning-subtle text-warning py-1 px-2 fs-12">Pending</span>;
-  return <span className="badge bg-danger-subtle text-danger py-1 px-2 fs-12">Cancelled</span>;
-};
-
-const VendorDashboardTable = () => {
-  const [page, setPage] = useState(1);
-  const [sortCol, setSortCol] = useState(null);
-  const [sortDir, setSortDir] = useState("asc");
-
-  // Sorting logic
-  const sortedData = React.useMemo(() => {
-    let data = [...sampleVendors];
-    if (sortCol) {
-      data.sort((a, b) => {
-        if (a[sortCol] < b[sortCol]) return sortDir === "asc" ? -1 : 1;
-        if (a[sortCol] > b[sortCol]) return sortDir === "asc" ? 1 : -1;
-        return 0;
-      });
-    }
-    return data;
-  }, [sortCol, sortDir]);
-
-  const totalPages = Math.ceil(sortedData.length / PAGE_SIZE);
-  const currentData = sortedData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
-  const handleSort = col => {
-    if (sortCol === col) {
-      setSortDir(sortDir === "asc" ? "desc" : "asc");
-    } else {
-      setSortCol(col);
-      setSortDir("asc");
-    }
-  };
-
-  const handleExportExcel = () => {
-    const exportData = [columns.map(col => col.label), ...sortedData.map(row => columns.map(col => col.key === 'status' ? row[col.key] : row[col.key]))];
-    const ws = XLSX.utils.aoa_to_sheet(exportData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Vendors");
-    XLSX.writeFile(wb, "vendors_dashboard.xlsx");
-  };
-
-  const handleExportPDF = () => {
-    const doc = new jsPDF();
-    doc.text("Vendors Dashboard", 10, 10);
-    let y = 20;
-    doc.text(columns.map(col => col.label).join(" | "), 10, y);
-    y += 10;
-    sortedData.forEach((row, i) => {
-      doc.text(columns.map(col => row[col.key]).join(" | "), 10, y + i * 10);
-    });
-    doc.save("vendors_dashboard.pdf");
-  };
+  useEffect(() => {
+    getAllTransactionDetails();
+    getEnquiryDetails();
+  }, [])
 
   return (
-    <Card className="mb-4">
-      <CardBody className="p-0">
-        <CardTitle as="h5" className="mb-3 p-3">Vendors Dashboard</CardTitle>
-        <div className="mb-3 d-flex gap-2 px-3">
-          <Button variant="outline-primary" size="sm" onClick={handleExportExcel}>
-            Export as Excel
-          </Button>
-          <Button variant="outline-danger" size="sm" onClick={handleExportPDF}>
-            Export as PDF
-          </Button>
-        </div>
-        <div className="table-responsive m-3">
-          <table className="table align-middle text-nowrap table-hover table-centered mb-0 table-bordered rounded">
-            <thead className="bg-light-subtle">
-              <tr>
-                {columns.map(col => (
-                  <th
-                    key={col.key}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => handleSort(col.key)}
-                  >
-                    {col.label}
-                    {sortCol === col.key ? (
-                      sortDir === "asc" ? " ▲" : " ▼"
-                    ) : null}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {currentData.map((item, idx) => (
-                <tr key={item.id}>
-                  <td>#{item.id}</td>
-                  <td>{item.name}</td>
-                  <td>{item.work}</td>
-                  <td>{item.quotation}</td>
-                  <td>{item.details}</td>
-                  <td>{statusBadge(item.status)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className="d-flex justify-content-end align-items-center p-3">
-          <Button
-            variant="outline-secondary"
-            size="sm"
-            className="me-2"
-            disabled={page === 1}
-            onClick={() => setPage(page - 1)}
-          >
-            Previous
-          </Button>
-          <span className="mx-2">Page {page} of {totalPages}</span>
-          <Button
-            variant="outline-secondary"
-            size="sm"
-            disabled={page === totalPages}
-            onClick={() => setPage(page + 1)}
-          >
-            Next
-          </Button>
-        </div>
-      </CardBody>
-    </Card>
-  );
-};
+    <div className="container my-5">
+      {/* Orders Table */}
+      <ExportableTable
+        title="Transactions"
+        data={ordersData}
+        columns={orderColumns}
+        filters={orderFilters}
+        setFilters={setOrderFilters}
+        filterOptions={{
+          orderStatus: ["Active", "Blocked"], // 👈 for orderStatus
+          paymentStatus: ["Initiated", "Success"], // 👈 reusing priority dropdown for paymentStatus
+        }}
+        totalPages={1}
+      />
 
-export default VendorDashboardTable; 
+      {/* Enquiries Table */}
+      <ExportableTable
+        title="Enquiries"
+        data={enquiriesData}
+        columns={enquiryColumns}
+        filters={enquiryFilters}
+        setFilters={setEnquiryFilters}
+        filterOptions={{
+          status: ["Open", "Closed"],
+          priority: ["low", "medium", "high"],
+        }}
+        totalPages={1}
+      />
+    </div>
+  );
+}

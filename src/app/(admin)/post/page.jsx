@@ -7,8 +7,6 @@ import Posts from './components/Posts';
 import DashboardReportsTree from './components/DashboardReportsTree';
 import VendorDashboardTable from './components/VendorDashboardTable';
 
-
-
 const handleGenerateReport = () => {
   alert('Generate Reports clicked! (Implement report generation logic here)');
 };
@@ -19,7 +17,7 @@ const handleExportData = () => {
 
 const PostPage = () => {
   return <>
-      <PageTitle title="Blog Grid" subName="Blog" />
+      <PageTitle title="Export Data" subName="Export" />
       <VendorDashboardTable />
       <div style={{ marginBottom: 24 }} className='d-none'>
         <DashboardReportsTree
