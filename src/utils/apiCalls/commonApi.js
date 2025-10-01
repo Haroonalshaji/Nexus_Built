@@ -11,6 +11,7 @@ export const getAdminDashboardStats = () => api.get("/admin/dashboard/stats");
 export const getVendors = () => api.get("/vendors/all");
 export const blockVendor = (vendorGuid) => api.put(`/vendors/block?vendorGuid=${vendorGuid}`)
 export const unBlockVendor = (vendorGuid) => api.put(`/vendors/unblock?vendorGuid=${vendorGuid}`)
+export const getVendorLicenses = (vendorGuid) => api.get(`vendors/licenses?vendorGuid=${vendorGuid}`)
 
 //contact-us
 export const getLeads = () => api.get("/contactus/all");

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Row, Col, Card, CardHeader, CardBody, Button, Modal, Form } from 'react-bootstrap';
 import Link from 'next/link';
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { blockVendor, getVendors, unBlockVendor } from '@/utils/apiCalls/commonApi';
+import { blockVendor, getVendorLicenses, getVendors, unBlockVendor } from '@/utils/apiCalls/commonApi';
 import { useNotificationContext } from '@/context/useNotificationContext';
 
 export default function VendorTable() {
@@ -14,7 +14,9 @@ export default function VendorTable() {
     const [actionType, setActionType] = useState(null);
     const [currentVendorGuid, setCurrentVendorGuid] = useState(null);
     const { showNotification } = useNotificationContext();
-
+    const [vendorLicenses, setVendorLicenses] = useState([])
+    const [selectedVendor, setSelectedVendor] = useState(null);
+    const [showLicense, setShowLicense] = useState(false);
     const [comment, setComment] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
@@ -42,7 +44,7 @@ export default function VendorTable() {
     }, []);
 
     // Filtered data
-    const filteredVendors = vendors.filter((v) => {
+    const filteredVendors = vendors.sort((a, b) => new Date(b.registeredOn) - new Date(a.registeredOn)).filter((v) => {
         const matchesSearch = searchTerm
             ? `${v.firstName} ${v.lastName} ${v.emailAddress} ${v.businessName}`
                 .toLowerCase()
@@ -65,6 +67,31 @@ export default function VendorTable() {
         setActionType(type);
         setCurrentVendorGuid(vendorGuid);
         setShowModal(true);
+    };
+
+    const getVendorLicenseAttachment = async (vendorGuid) => {
+        // setLoading(true);
+        setSelectedVendor(vendorGuid);
+        try {
+            const resVendorAtt = await getVendorLicenses(vendorGuid);
+            if (resVendorAtt.data.isSuccess) {
+                setVendorLicenses(resVendorAtt.data.result || []);
+                setShowLicense(true);
+            } else {
+                showNotification({
+                    message: resVendorAtt.data.message,
+                    variant: "danger"
+                })
+            }
+        } catch (error) {
+            console.error(error);
+            showNotification({
+                message: error.response.data.message,
+                variant: "danger"
+            })
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleClose = () => {
@@ -160,6 +187,7 @@ export default function VendorTable() {
                                 <option value="">All Priority</option>
                                 <option value="PendingVerification">Pending Verification</option>
                                 <option value="Active">Active</option>
+                                <option value="Rejected">Rejected</option>
                             </Form.Select>
                         </div>
                     </CardHeader>
@@ -189,6 +217,7 @@ export default function VendorTable() {
                                                 <th>Business Name</th>
                                                 <th>Registered On</th>
                                                 <th>Experience</th>
+                                                <th>Vendor License</th>
                                                 <th>Vendor Status</th>
                                                 <th>Application Status</th>
                                                 <th>Action</th>
@@ -204,7 +233,7 @@ export default function VendorTable() {
                                                         </div>
                                                     </td> */}
                                                     <td>
-                                                       {idx+1}
+                                                        {idx + 1}
                                                     </td>
                                                     <td>{item.firstName} {item.lastName}</td>
                                                     <td>{item.emailAddress}</td>
@@ -215,13 +244,25 @@ export default function VendorTable() {
                                                             : "N/A"}
                                                     </td>
                                                     <td>{item.yearsOfExperience}</td>
+                                                    <td>
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline-primary"
+                                                            onClick={() => getVendorLicenseAttachment(item.vendorGuid)}
+                                                        >
+                                                            View Licenses
+                                                        </Button>
+                                                    </td>
                                                     <td className={item.vendorStatus === "Blocked" ? "text-danger" : "text-success"}>
                                                         {item.vendorStatus}
                                                     </td>
                                                     <td>
-                                                        <span className={`badge bg-${item.businessStatus === "Rejected" ? "warning" : "success"}-subtle text-${item.businessStatus === "Rejected" ? "warning" : "success"} py-1 px-2 fs-12`}>
+                                                        <span
+                                                            className={`badge  ${item.businessStatus === "Active" ? "bg-success-subtle text-success" : ""} ${item.businessStatus === "PendingVerification" ? "bg-warning-subtle text-warning" : ""} ${item.businessStatus === "Rejected" ? "bg-danger-subtle text-danger" : ""} py-1 px-2 fs-12`}
+                                                        >
                                                             {item.businessStatus}
                                                         </span>
+
                                                     </td>
                                                     <td>
                                                         <div className="d-flex gap-2">
@@ -290,6 +331,52 @@ export default function VendorTable() {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            {showLicense && (
+                <Modal
+                    show={showLicense}
+                    onHide={() => setShowLicense(false)}
+                    size="lg"
+                    centered
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Vendor Licenses</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {loading ? (
+                            <div className="text-center py-5">Loading...</div>
+                        ) : vendorLicenses.length > 0 ? (
+                            <div className="d-flex flex-wrap gap-3">
+                                {vendorLicenses.map((license, i) => (
+                                    <a
+                                        key={i}
+                                        href={license.filePath}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {license.fileType === "Image" ? (
+                                            <img
+                                                src={license.filePath}
+                                                alt={license.fileName}
+                                                className="border rounded"
+                                                style={{ width: "120px", height: "120px", objectFit: "cover" }}
+                                            />
+                                        ) : (
+                                            <div className="p-2 border rounded bg-light">
+                                                📄{" "}
+                                                {license.fileName.length > 20
+                                                    ? license.fileName.substring(0, 20) + "..."
+                                                    : license.fileName}
+                                            </div>
+                                        )}
+                                    </a>
+                                ))}
+                            </div>
+                        ) : (
+                            <span className="text-muted">No Licenses Available</span>
+                        )}
+                    </Modal.Body>
+                </Modal>
+            )}
         </Row>
     );
 };

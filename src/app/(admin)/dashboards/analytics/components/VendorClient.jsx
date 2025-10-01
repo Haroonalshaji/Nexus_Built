@@ -19,15 +19,21 @@ import {
 } from "react-bootstrap";
 import IconifyIcon from "@/components/wrappers/IconifyIcon";
 import { useRouter } from "next/navigation";
-import { approveVendorApplication, getPendingVendorApplications, rejectVendorApplication } from "@/utils/apiCalls/commonApi";
+import { approveVendorApplication, getPendingVendorApplications, getVendorLicenses, rejectVendorApplication } from "@/utils/apiCalls/commonApi";
+import { useNotificationContext } from "@/context/useNotificationContext";
+
 
 const VendorClient = () => {
     const { push } = useRouter();
     const [showModal, setShowModal] = useState(false);
+    const [showLicense, setShowLicense] = useState(false);
     const [actionType, setActionType] = useState("");
     const [comment, setComment] = useState("");
     const [selectedId, setSelectedId] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [vendorLicenses, setVendorLicenses] = useState([])
+    const [selectedVendor, setSelectedVendor] = useState(null);
+    const { showNotification } = useNotificationContext()
 
     // 🚀 store API vendors here
     const [vendors, setVendors] = useState([]);
@@ -55,6 +61,31 @@ const VendorClient = () => {
         setShowModal(false);
         setComment("");
         setSelectedId(null);
+    };
+
+    const getVendorLicenseAttachment = async (vendorGuid) => {
+        // setLoading(true);
+        setSelectedVendor(vendorGuid);
+        try {
+            const resVendorAtt = await getVendorLicenses(vendorGuid);
+            if (resVendorAtt.data.isSuccess) {
+                setVendorLicenses(resVendorAtt.data.result || []);
+                setShowLicense(true);
+            } else {
+                showNotification({
+                    message: resVendorAtt.data.message,
+                    variant: "danger"
+                })
+            }
+        } catch (error) {
+            console.error(error);
+            showNotification({
+                message: error.response.data.message,
+                variant: "danger"
+            })
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleSubmit = async () => {
@@ -143,6 +174,8 @@ const VendorClient = () => {
         </div>
     );
 
+
+
     return (
         <Row>
             <Col xl={12}>
@@ -164,7 +197,7 @@ const VendorClient = () => {
                                     <table className="table align-middle text-nowrap table-hover table-centered mb-0">
                                         <thead className="bg-light-subtle">
                                             <tr>
-                                                <th style={{ width: 20 }}>
+                                                {/* <th style={{ width: 20 }}>
                                                     <div className="form-check">
                                                         <input
                                                             type="checkbox"
@@ -176,21 +209,22 @@ const VendorClient = () => {
                                                             htmlFor="customCheck1"
                                                         />
                                                     </div>
-                                                </th>
-                                                <th>Vendor ID</th>
+                                                </th> */}
+                                                <th>#</th>
                                                 <th>Vendor Name</th>
                                                 <th>Vendor Email</th>
                                                 <th>Business Name</th>
                                                 <th>Registered On</th>
                                                 <th>Experience</th>
                                                 <th>Application Status</th>
+                                                <th>Vendor License</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {currentData.sort((a, b) => new Date(b.registeredOn) - new Date(a.registeredOn)).map((item, idx) => (
                                                 <tr key={idx}>
-                                                    <td>
+                                                    {/* <td>
                                                         <div className="form-check">
                                                             <input
                                                                 type="checkbox"
@@ -204,13 +238,14 @@ const VendorClient = () => {
                                                                 &nbsp;
                                                             </label>
                                                         </div>
-                                                    </td>
+                                                    </td> */}
                                                     <td>
-                                                        <Link href="#" className="text-dark fw-medium">
+                                                        {/* <Link href="#" className="text-dark fw-medium">
                                                             #{item.vendorGuid
                                                                 ? `${item.vendorGuid.substring(0, 6)}...${item.vendorGuid.slice(-4)}`
                                                                 : ""}
-                                                        </Link>
+                                                        </Link> */}
+                                                        {idx + 1}
                                                     </td>
                                                     <td>
                                                         {item.firstName} {item.lastName}
@@ -244,6 +279,16 @@ const VendorClient = () => {
                                                             {item.businessStatus}
                                                         </span>
                                                     </td>
+                                                    <td>
+                                                        <Button
+                                                            size="sm"
+                                                            variant="outline-primary"
+                                                            onClick={() => getVendorLicenseAttachment(item.vendorGuid)}
+                                                        >
+                                                            View Licenses
+                                                        </Button>
+                                                    </td>
+
                                                     <td>
                                                         <div className="d-flex gap-2">
                                                             <Button
@@ -320,6 +365,53 @@ const VendorClient = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            {showLicense && (
+                <Modal
+                    show={showLicense}
+                    onHide={() => setShowLicense(false)}
+                    size="lg"
+                    centered
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Vendor Licenses</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        {loading ? (
+                            <div className="text-center py-5">Loading...</div>
+                        ) : vendorLicenses.length > 0 ? (
+                            <div className="d-flex flex-wrap gap-3">
+                                {vendorLicenses.map((license, i) => (
+                                    <a
+                                        key={i}
+                                        href={license.filePath}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        {license.fileType === "Image" ? (
+                                            <img
+                                                src={license.filePath}
+                                                alt={license.fileName}
+                                                className="border rounded"
+                                                style={{ width: "120px", height: "120px", objectFit: "cover" }}
+                                            />
+                                        ) : (
+                                            <div className="p-2 border rounded bg-light">
+                                                📄{" "}
+                                                {license.fileName.length > 20
+                                                    ? license.fileName.substring(0, 20) + "..."
+                                                    : license.fileName}
+                                            </div>
+                                        )}
+                                    </a>
+                                ))}
+                            </div>
+                        ) : (
+                            <span className="text-muted">No Licenses Available</span>
+                        )}
+                    </Modal.Body>
+                </Modal>
+            )}
+
         </Row>
     );
 };
