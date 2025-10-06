@@ -388,12 +388,19 @@ const VendorClient = () => {
                                         rel="noopener noreferrer"
                                     >
                                         {license.fileType === "Image" ? (
-                                            <img
-                                                src={license.filePath}
-                                                alt={license.fileName}
-                                                className="border rounded"
-                                                style={{ width: "120px", height: "120px", objectFit: "cover" }}
-                                            />
+                                            <div className="overflow-hidden">
+                                                <img
+                                                    src={license.filePath}
+                                                    alt={license.fileName}
+                                                    className="border rounded"
+                                                    style={{ width: "220px", height: "120px", objectFit: "cover" }}
+                                                />
+                                                <p className="text-truncate mt-1"
+                                                    style={{ maxWidth: "220px" }}
+                                                    title={license.fileName}>
+                                                    {license.fileName}
+                                                </p>
+                                            </div>
                                         ) : (
                                             <div className="p-2 border rounded bg-light">
                                                 📄{" "}

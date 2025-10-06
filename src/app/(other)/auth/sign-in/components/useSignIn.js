@@ -148,7 +148,7 @@ const useSignIn = () => {
         accessTokenFromCookie === userRoles.accessToken &&
         refreshTokenFromCookie === userRoles.refreshToken;
 
-      if (RetData.isSuccess === true) {
+      if (RetData.isSuccess == true) {
         if (allCookiesSet) {
           showNotification({
             message: `✅  ${RetData.message}`,
@@ -167,16 +167,23 @@ const useSignIn = () => {
             variant: "danger",
           })
         }
-      } else {
+      } 
+
+      if (RetData.isSuccess == false) {
         showNotification({
           message: `${RetData.message}`,
           variant: "danger",
         })
+        console.log("hitted the isSuccess is false conditon")
       }
 
     } catch (error) {
       setLoading(false);
       console.error(error);
+      showNotification({
+        message: `${error.response.data.message}`,
+        variant: "danger",
+      })
     }
   });
 
