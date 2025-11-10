@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button, Card, CardBody, CardHeader, CardTitle, Table, Badge } from "react-bootstrap";
 import PageTitle from "@/components/PageTitle";
-import { blockAdminUser, getAllAdminUsers, unBlockAdminUser } from "@/utils/apiCalls/auth";
+import { blockAdminUser, deleteAdminUser, getAllAdminUsers, unBlockAdminUser } from "@/utils/apiCalls/auth";
 import { useNotificationContext } from "@/context/useNotificationContext";
 import Link from "next/link";
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
@@ -27,11 +27,11 @@ const AdminUsersPage = () => {
         }
     };
 
-    const deleteAdminUser = async (userGuid) => {
+    const deleteAdminUserPart = async (userGuid) => {
         // confirm first
         if (!confirm("Are you sure you want to delete this user? This action cannot be undone.")) return;
         try {
-            // const response = await api.delete(`/users?adminGuid=${userGuid}`); // ✅ API: delete admin user
+            const response = await deleteAdminUser(userGuid); // ✅ API: delete admin user
             showNotification({ variant: 'success', message: 'User deleted successfully' });
             await fetchUsers(); // refresh list
         }
@@ -148,7 +148,7 @@ const AdminUsersPage = () => {
                                                 <Button
                                                     size="sm"
                                                     variant="outline-danger"
-                                                    onClick={deleteAdminUser}
+                                                    onClick={()=>deleteAdminUserPart(user.userGuid)}
                                                     className="p-1 d-flex align-items-center justify-content-center"
                                                     title="Delete"
                                                 >
