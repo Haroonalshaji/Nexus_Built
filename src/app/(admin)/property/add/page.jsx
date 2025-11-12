@@ -10,7 +10,7 @@ export const metadata = {
 };
 const PropertyAddPage = () => {
   return <>
-    <PageTitle title="Add Category" subName="Real Estate" />
+    <PageTitle title="Add Category" subName="Vendor Services" />
     <Row>
       {/* <PropertyAddCard className="d-none"/> */}
       <Col >

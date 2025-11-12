@@ -92,7 +92,7 @@ const ReviewsPage = () => {
 
   return (
     <>
-      <PageTitle title="Enquiries" subName="Real Estate" />
+      <PageTitle title="Enquiries" subName="Admin Services" />
 
       {/* Filters */}
       <Row className="mb-4">

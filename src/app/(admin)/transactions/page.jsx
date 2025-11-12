@@ -5,7 +5,7 @@ export const metadata = {
 };
 const TransactionsPage = () => {
   return <>
-      <PageTitle title="Transactions" subName="Real Estate" />
+      <PageTitle title="Transactions" subName="Admin Services" />
       <TransactionData />
     </>;
 };
