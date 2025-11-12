@@ -41,11 +41,17 @@ const VendorClient = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
 
-    const totalVendorsListed = Math.ceil(vendors.length / itemsPerPage);
-    const currentData = vendors.slice(
+    // Sort vendors by registeredOn before pagination
+    const sortedVendors = [...vendors].sort(
+        (a, b) => new Date(b.registeredOn) - new Date(a.registeredOn)
+    );
+
+    const totalVendorsListed = Math.ceil(sortedVendors.length / itemsPerPage);
+    const currentData = sortedVendors.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
+
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -222,7 +228,7 @@ const VendorClient = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {currentData.sort((a, b) => new Date(b.registeredOn) - new Date(a.registeredOn)).map((item, idx) => (
+                                            {currentData.map((item, idx) => (
                                                 <tr key={idx}>
                                                     {/* <td>
                                                         <div className="form-check">
