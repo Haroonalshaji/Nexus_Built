@@ -249,6 +249,7 @@ export default function VendorTable() {
                                                 <th>Vendor Status</th>
                                                 <th>Premium Vendor</th>
                                                 <th>Application Status</th>
+                                                <th>Active Subscription</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -290,7 +291,7 @@ export default function VendorTable() {
                                                             size="sm"
                                                             variant={item.isPremium === "Yes" ? "success" : "danger"}
                                                             onClick={() => handlePremiumToggle(item.vendorGuid, item.isPremium)}
-                                                            disabled={item.businessStatus !== "Active"}
+                                                            disabled={item.isHavingActiveSubscription !== "Active"}
                                                         >
                                                             {item.isPremium === "Yes" ? "ON" : "OFF"}
                                                         </Button>
@@ -302,6 +303,13 @@ export default function VendorTable() {
                                                             {item.businessStatus}
                                                         </span>
 
+                                                    </td>
+                                                    <td className='text-center'>
+                                                        {item.isHavingActiveSubscription ? (
+                                                            <span className="badge bg-success text-center text-white">Subscribed</span>
+                                                        ) : (
+                                                            <span className="badge bg-danger text-white text-center ">Over</span>
+                                                        )}
                                                     </td>
                                                     <td>
                                                         <div className="d-flex gap-2">
