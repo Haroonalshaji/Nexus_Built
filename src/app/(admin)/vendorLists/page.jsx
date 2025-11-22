@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { Row, Col, Card, CardHeader, CardBody, Button, Modal, Form } from 'react-bootstrap';
 import Link from 'next/link';
 import IconifyIcon from '@/components/wrappers/IconifyIcon';
-import { blockVendor, getVendorLicenses, getVendors, unBlockVendor } from '@/utils/apiCalls/commonApi';
+import { blockVendor, getVendorLicenses, getVendors, markVendorAsNonPremium, markVendorAsPremium, unBlockVendor } from '@/utils/apiCalls/commonApi';
 import { useNotificationContext } from '@/context/useNotificationContext';
+import Image from 'next/image';
 
 export default function VendorTable() {
     const [vendors, setVendors] = useState([]);
@@ -155,6 +156,33 @@ export default function VendorTable() {
         return pages;
     };
 
+    const handlePremiumToggle = async (vendorGuid, newStatus) => {
+        try {
+            console.log("Button clicked!", newStatus);
+
+            if (newStatus === "No") {
+                // Mark as premium
+                const res = await markVendorAsPremium(vendorGuid);
+                showNotification({
+                    message: `${res.data.message} `,
+                    variant: "success",
+                })
+            } else {
+                // Remove premium
+                const Resp = await markVendorAsNonPremium(vendorGuid);
+                showNotification({
+                    message: `${Resp.data.message} `,
+                    variant: "danger",
+                })
+            }
+
+            fetchVendors();
+
+        } catch (error) {
+            console.error("Error toggling premium status:", error);
+        }
+    };
+
     return (
         <Row>
             <Col xl={12}>
@@ -219,6 +247,7 @@ export default function VendorTable() {
                                                 <th>Experience</th>
                                                 <th>Vendor License</th>
                                                 <th>Vendor Status</th>
+                                                <th>Premium Vendor</th>
                                                 <th>Application Status</th>
                                                 <th>Action</th>
                                             </tr>
@@ -253,8 +282,18 @@ export default function VendorTable() {
                                                             View Licenses
                                                         </Button>
                                                     </td>
-                                                    <td className={item.vendorStatus === "Blocked" ? "text-danger" : "text-success"}>
+                                                    <td className={item.vendorStatus === "Blocked" ? "text-danger text-center" : "text-success text-center"}>
                                                         {item.vendorStatus}
+                                                    </td>
+                                                    <td className='d-flex align-items-center justify-content-center'>
+                                                        <Button
+                                                            size="sm"
+                                                            variant={item.isPremium === "Yes" ? "success" : "danger"}
+                                                            onClick={() => handlePremiumToggle(item.vendorGuid, item.isPremium)}
+                                                            disabled={item.businessStatus !== "Active"}
+                                                        >
+                                                            {item.isPremium === "Yes" ? "ON" : "OFF"}
+                                                        </Button>
                                                     </td>
                                                     <td>
                                                         <span
@@ -354,7 +393,7 @@ export default function VendorTable() {
                                         rel="noopener noreferrer"
                                     >
                                         {license.fileType === "Image" ? (
-                                            <img
+                                            <Image
                                                 src={license.filePath}
                                                 alt={license.fileName}
                                                 className="border rounded"

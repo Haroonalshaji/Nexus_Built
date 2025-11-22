@@ -47,3 +47,7 @@ export const getVendorEnqAttachments = (enquiryGuid) => api.get(`/admin/enquiry/
 
 //adminquote
 export const getVendorQuoteAdmin = (enquiryGuid) => api.get(`/admin/quote?enquiryGuid=${enquiryGuid}`);
+
+// markVendorAsPremium
+export const markVendorAsPremium = (vendorGuid) => api.put(`/vendors/mark-as-premium?vendorGuid=${vendorGuid}`)
+export const markVendorAsNonPremium = (vendorGuid) => api.put(`/vendors/mark-as-non-premium?vendorGuid=${vendorGuid}`)
