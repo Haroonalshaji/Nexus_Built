@@ -291,7 +291,7 @@ export default function VendorTable() {
                                                             size="sm"
                                                             variant={item.isPremium === "Yes" ? "success" : "danger"}
                                                             onClick={() => handlePremiumToggle(item.vendorGuid, item.isPremium)}
-                                                            disabled={item.isHavingActiveSubscription !== "Active"}
+                                                            disabled={item.isHavingActiveSubscription !== true}
                                                         >
                                                             {item.isPremium === "Yes" ? "ON" : "OFF"}
                                                         </Button>
