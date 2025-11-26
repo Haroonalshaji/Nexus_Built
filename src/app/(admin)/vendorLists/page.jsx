@@ -7,6 +7,8 @@ import IconifyIcon from '@/components/wrappers/IconifyIcon';
 import { blockVendor, getVendorLicenses, getVendors, markVendorAsNonPremium, markVendorAsPremium, unBlockVendor } from '@/utils/apiCalls/commonApi';
 import { useNotificationContext } from '@/context/useNotificationContext';
 import Image from 'next/image';
+import ConfirmModal from '@/components/ConfirmModal';
+
 
 export default function VendorTable() {
     const [vendors, setVendors] = useState([]);
@@ -156,17 +158,26 @@ export default function VendorTable() {
         return pages;
     };
 
-    const handlePremiumToggle = async (vendorGuid, newStatus) => {
+    const handlePremiumToggle = async (vendorGuid, newStatus, activeSubsStatus) => {
         try {
             console.log("Button clicked!", newStatus);
 
             if (newStatus === "No") {
                 // Mark as premium
+                if (!activeSubsStatus) {
+                    // Show confirmation message
+                    const confirmContinue = window.confirm(
+                        "This vendor doesn't have an active subscription. Are you sure you want to continue?"
+                    );
+
+                    if (!confirmContinue) return; // stop if user cancels
+                }
+
                 const res = await markVendorAsPremium(vendorGuid);
                 showNotification({
-                    message: `${res.data.message} `,
+                    message: `${res.data.message}`,
                     variant: "success",
-                })
+                });
             } else {
                 // Remove premium
                 const Resp = await markVendorAsNonPremium(vendorGuid);
@@ -290,8 +301,8 @@ export default function VendorTable() {
                                                         <Button
                                                             size="sm"
                                                             variant={item.isPremium === "Yes" ? "success" : "danger"}
-                                                            onClick={() => handlePremiumToggle(item.vendorGuid, item.isPremium)}
-                                                            disabled={item.isHavingActiveSubscription !== true}
+                                                            onClick={() => handlePremiumToggle(item.vendorGuid, item.isPremium, item.isHavingActiveSubscription)}
+                                                        // disabled={item.isHavingActiveSubscription !== true}
                                                         >
                                                             {item.isPremium === "Yes" ? "ON" : "OFF"}
                                                         </Button>
